@@ -47,6 +47,13 @@ module.exports = {
         unnamedComponents: 'arrow-function',
       },
     ],
+    'react/self-closing-comp': [
+      'error',
+      {
+        component: true,
+        html: true,
+      },
+    ],
     'no-constructor-return': 'warn',
     'no-duplicate-imports': 'error',
     'no-template-curly-in-string': 'warn',

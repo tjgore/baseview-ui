@@ -14,8 +14,7 @@ const Login: NextPage = () => {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="mr-2 h-8 w-8 text-blue-700"
-                >
+                  className="mr-2 h-8 w-8 text-blue-700">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -42,13 +41,11 @@ const Login: NextPage = () => {
                 <form
                   className="space-y-6"
                   action="#"
-                  method="POST"
-                >
+                  method="POST">
                   <div>
                     <label
                       htmlFor="email"
-                      className="block text-sm font-medium text-gray-700"
-                    >
+                      className="block text-sm font-medium text-gray-700">
                       Email address
                     </label>
                     <div className="mt-1">
@@ -66,8 +63,7 @@ const Login: NextPage = () => {
                   <div>
                     <label
                       htmlFor="password"
-                      className="block text-sm font-medium text-gray-700"
-                    >
+                      className="block text-sm font-medium text-gray-700">
                       Password
                     </label>
                     <div className="mt-1">
@@ -86,8 +82,7 @@ const Login: NextPage = () => {
                     <div className="text-sm">
                       <a
                         href="#"
-                        className="font-medium text-blue-600 hover:text-blue-500"
-                      >
+                        className="font-medium text-blue-600 hover:text-blue-500">
                         Forgot your password?
                       </a>
                     </div>
@@ -97,8 +92,7 @@ const Login: NextPage = () => {
                       type="submit"
                       className="flex w-full justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 
                       text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2
-                      focus:ring-blue-500 focus:ring-offset-2"
-                    >
+                      focus:ring-blue-500 focus:ring-offset-2">
                       Sign in
                     </button>
                   </div>
