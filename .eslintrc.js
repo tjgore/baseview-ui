@@ -5,8 +5,8 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:tailwindcss/recommended',
-    'plugin:prettier/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    'plugin:prettier/recommended',
   ],
   parserOptions: {
     tsconfigRootDir: __dirname,
@@ -14,13 +14,7 @@ module.exports = {
     project: './tsconfig.json',
   },
   parser: '@typescript-eslint/parser',
-  ignorePatterns: [
-    '.eslintrc.js',
-    'lint-staged.config.js',
-    'postcss.config.js',
-    'next.config.js',
-    'tailwind.config.js',
-  ], // prevent eslint from scanning this file
+  ignorePatterns: ['.eslintrc.js', 'lint-staged.config.js', 'postcss.config.js', 'next.config.js', 'tailwind.config.js', 'prettier.config.js'], // prevent eslint from scanning this file
   rules: {
     'react/button-has-type': [
       'warn',
@@ -35,10 +29,7 @@ module.exports = {
     '@typescript-eslint/prefer-optional-chain': 'warn',
     '@typescript-eslint/prefer-string-starts-ends-with': 'warn',
     '@typescript-eslint/promise-function-async': 'error',
-    '@typescript-eslint/type-annotation-spacing': [
-      'warn',
-      { after: true, before: false },
-    ],
+    '@typescript-eslint/type-annotation-spacing': ['warn', { after: true, before: false }],
     '@typescript-eslint/naming-convention': [
       'error',
       {
@@ -69,10 +60,7 @@ module.exports = {
     'no-alert': 'error',
     'no-console': 'error',
     'no-else-return': 'warn',
-    'no-magic-numbers': [
-      'warn',
-      { ignoreArrayIndexes: true, enforceConst: true, detectObjects: false },
-    ],
+    'no-magic-numbers': ['warn', { ignoreArrayIndexes: true, enforceConst: true, detectObjects: false }],
     'no-mixed-operators': 'warn',
     'no-nested-ternary': 'error',
     'no-var': 'error',
@@ -98,5 +86,6 @@ module.exports = {
       },
     ], // max lines per file
     'no-loops/no-loops': 'error',
+    '@next/next/no-img-element': 'off', // turn on when ready to use Nextjs Image
   },
 };
