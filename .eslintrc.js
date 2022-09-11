@@ -14,7 +14,13 @@ module.exports = {
     project: './tsconfig.json',
   },
   parser: '@typescript-eslint/parser',
-  ignorePatterns: ['.eslintrc.js'], // prevent eslint from scanning this file
+  ignorePatterns: [
+    '.eslintrc.js',
+    'lint-staged.config.js',
+    'postcss.config.js',
+    'next.config.js',
+    'tailwind.config.js',
+  ], // prevent eslint from scanning this file
   rules: {
     'react/button-has-type': [
       'warn',

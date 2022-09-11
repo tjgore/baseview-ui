@@ -4,11 +4,11 @@ module.exports = {
   useTabs: false,
   semi: true,
   singleQuote: true,
-  trailingComma: "all",
+  trailingComma: 'all',
   bracketSpacing: true,
   jsxBracketSameLine: true,
-  arrowParens: "avoid",
+  arrowParens: 'avoid',
   requirePragma: false,
   insertPragma: false,
-  proseWrap: "always"
-}
+  proseWrap: 'always',
+};
