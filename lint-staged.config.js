@@ -9,9 +9,9 @@ module.exports = {
   // Type checking
   '**/*.(ts|tsx)': "bash -c ' tsc -p ./tsconfig.json --noEmit'",
 
-  // Lint Typescript
-  '*.{ts,tsx}': [buildEslintCommand],
-
   // Format TypeScript and JavaScript files
   '**/*.(ts|tsx|js|md|json)': ['prettier --write .'],
+
+  // Lint Typescript
+  //'*.{ts,tsx}': [buildEslintCommand],
 };
