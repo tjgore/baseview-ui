@@ -12,6 +12,7 @@ module.exports = {
   insertPragma: false,
   proseWrap: 'always',
   singleAttributePerLine: true,
+  jsxBracketSameLine: true,
   plugins: [require('prettier-plugin-tailwindcss')],
   tailwindConfig: './tailwind.config.js',
 };

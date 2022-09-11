@@ -7,9 +7,6 @@ type Data = {
 
 const OK = 200;
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>,
-) {
+export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   res.status(OK).json({ name: 'John Doe' });
 }
