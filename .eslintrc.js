@@ -28,8 +28,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/prefer-optional-chain': 'warn',
     '@typescript-eslint/prefer-string-starts-ends-with': 'warn',
-    '@typescript-eslint/promise-function-async': 'error',
-    '@typescript-eslint/type-annotation-spacing': ['warn', { after: true, before: false }],
+    '@typescript-eslint/no-floating-promises': 'off',
     '@typescript-eslint/naming-convention': [
       'error',
       {

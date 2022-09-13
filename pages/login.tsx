@@ -1,6 +1,19 @@
 import type { NextPage } from 'next';
+import { useEffect } from 'react';
+import { auth } from '../services/api';
 
 const Login: NextPage = () => {
+  useEffect(() => {
+    (async () => {
+      try {
+        await auth.login({ email: 'tj@gmail.com', password: '123456' });
+        // console.log(response);
+      } catch (error) {
+        // console.log(error);
+      }
+    })();
+  }, []);
+
   return (
     <div className="overflow-hidden bg-gray-200 font-sans antialiased">
       <div className="min-h-screen bg-gray-50">
