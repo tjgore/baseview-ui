@@ -1,10 +1,11 @@
 module.exports = {
-  plugins: ['@typescript-eslint', 'tailwindcss', 'no-loops'],
+  plugins: ['@typescript-eslint', 'tailwindcss', 'no-loops', 'import'],
   extends: [
     'next/core-web-vitals',
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:tailwindcss/recommended',
+    'plugin:import/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:prettier/recommended',
   ],
@@ -93,5 +94,20 @@ module.exports = {
     ], // max lines per file
     'no-loops/no-loops': 'error',
     '@next/next/no-img-element': 'off', // turn on when ready to use Nextjs Image
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'internal'],
+        pathGroups: [
+          {
+            pattern: 'react',
+            group: 'external',
+            position: 'before',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['react'],
+      },
+    ],
+    'import/named': 'off',
   },
 };

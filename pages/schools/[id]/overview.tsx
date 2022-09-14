@@ -1,6 +1,6 @@
+import { Fragment, useEffect } from 'react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
@@ -28,6 +28,10 @@ function classNames(...classes: string[]) {
 const Overview: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
+  // console.log('school render', router.query);
+  useEffect(() => {
+    // console.log('school overview page useeffect url param', id);
+  }, [id]);
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="min-h-full">

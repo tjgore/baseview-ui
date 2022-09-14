@@ -1,8 +1,12 @@
-import Axios, { AxiosRequestConfig, AxiosPromise } from 'axios';
+import Axios, { AxiosRequestConfig, AxiosPromise, AxiosError } from 'axios';
 
 export type HttpRequestType = {
   [name: string]: (url: string, config?: AxiosRequestConfig) => AxiosPromise;
 };
+
+export type NextRequestType = () => AxiosPromise;
+
+export type HttpRequestError = AxiosError;
 
 export const axios = Axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,

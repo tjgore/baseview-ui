@@ -1,18 +1,21 @@
 import type { NextPage } from 'next';
-import { useEffect } from 'react';
-import { auth } from '../services/api';
+import { useForm } from 'react-hook-form';
+import useAuth from '../hooks/useAuth';
+// import { LoginDataType } from '../types';
 
 const Login: NextPage = () => {
-  useEffect(() => {
-    (async () => {
-      try {
-        await auth.login({ email: 'tj@gmail.com', password: '123456' });
-        // console.log(response);
-      } catch (error) {
-        // console.log(error);
-      }
-    })();
-  }, []);
+  const { login } = useAuth({ middleware: 'guest' });
+
+  const {
+    register,
+    handleSubmit,
+    // formState: { errors },
+  } = useForm();
+
+  const onSubmit = () => {
+    // console.log(data, errors);
+    login({ email: '', password: '' });
+  };
 
   return (
     <div className="overflow-hidden bg-gray-200 font-sans antialiased">
@@ -53,8 +56,7 @@ const Login: NextPage = () => {
               <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
                 <form
                   className="space-y-6"
-                  action="#"
-                  method="POST">
+                  onSubmit={() => handleSubmit(onSubmit)}>
                   <div>
                     <label
                       htmlFor="email"
@@ -64,10 +66,9 @@ const Login: NextPage = () => {
                     <div className="mt-1">
                       <input
                         id="email"
-                        name="email"
                         type="email"
                         autoComplete="email"
-                        required
+                        {...register('email')}
                         className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 shadow-sm placeholder:text-gray-400 focus:border-blue-500
                         focus:outline-none focus:ring-blue-500 sm:text-sm"
                       />
@@ -82,10 +83,9 @@ const Login: NextPage = () => {
                     <div className="mt-1">
                       <input
                         id="password"
-                        name="password"
                         type="password"
                         autoComplete="current-password"
-                        required
+                        {...register('password')}
                         className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 shadow-sm placeholder:text-gray-400 focus:border-blue-500
                         focus:outline-none focus:ring-blue-500 sm:text-sm"
                       />

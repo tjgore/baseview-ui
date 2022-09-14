@@ -1,5 +1,5 @@
-import httpRequest from '../HttpClient';
-import { AxiosPromise } from 'axios';
+import { LoginDataType } from '../../types';
+import httpRequest, { NextRequestType } from '../HttpClient';
 
 export const csrfToken = async () => {
   try {
@@ -9,11 +9,13 @@ export const csrfToken = async () => {
   }
 };
 
-const withCsrf = async (nextRequest: () => AxiosPromise) => {
+const withCsrf = async (nextRequest: NextRequestType) => {
   await csrfToken();
   return nextRequest();
 };
 
 export const auth = {
-  login: async (data: { email: string; password: string }) => withCsrf(() => httpRequest.post('/login', { data })),
+  login: (data: LoginDataType) => withCsrf(() => httpRequest.post('/login', { data })),
+  logout: () => httpRequest.post('/logout'),
+  user: () => withCsrf(() => httpRequest.get('/api/user')),
 };
