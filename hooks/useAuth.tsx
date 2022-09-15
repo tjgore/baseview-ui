@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useCallback, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { auth } from '../services/api';
 import { HttpRequestError } from '../services/HttpClient';
 import { LoginDataType } from '../types';
@@ -9,45 +10,43 @@ type UseAuthType = {
   middleware: string;
 };
 
-// const redirectIfAuth = '/schools';
+const redirectIfAuth = '/schools/1/overview';
 
 const useAuth = ({ middleware }: UseAuthType) => {
-  const [errorStatus, setErrorStatus] = useState<unknown | null>(null);
+  const router = useRouter();
+
+  const queryClient = useQueryClient();
   const {
     data: user,
     isLoading,
     isFetching,
     error,
   } = useQuery(['user'], auth.user, {
-    staleTime: 5,
+    staleTime: 60,
     retry: (failureCount, error: HttpRequestError) => error.response?.status !== UNAUTHENTICATED,
   });
 
   const login = async (data: LoginDataType) => {
-    setErrorStatus(null);
-    try {
-      await auth.login(data);
-    } catch (err) {
-      // console.log('error', err);
-      setErrorStatus(err);
-    }
+    await auth.login(data);
+    queryClient.invalidateQueries(['user']);
   };
 
-  const logout = () => {
-    return {};
-  };
+  const logout = useCallback(async () => {
+    try {
+      await auth.logout();
+    } catch (err) {
+      console.log('logout error', err);
+    }
+    window.location.pathname = '/login';
+  }, []);
 
   useEffect(() => {
-    if (middleware === 'auth' && user) {
-      return;
-      // redirect
-    }
-    // console.log('useEffect user and error change', user, error);
-  }, [user, error]);
+    if (middleware === 'guest' && redirectIfAuth && user) router.push(redirectIfAuth);
+    if (middleware === 'auth' && error) router.push('/logout');
+  }, [user, error, middleware, router]);
 
   return {
     user,
-    errorStatus,
     isLoading,
     isFetching,
     login,

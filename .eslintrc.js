@@ -38,8 +38,9 @@ module.exports = {
         leadingUnderscore: 'allow',
       },
     ],
-    '@typescript-eslint/no-confusing-void-expression': 'error',
+    '@typescript-eslint/no-confusing-void-expression': 'off',
     '@typescript-eslint/no-duplicate-enum-values': 'warn',
+    '@typescript-eslint/no-misused-promises': ['warn', { checksVoidReturn: false }],
     'react/function-component-definition': [
       'error',
       {
@@ -65,7 +66,7 @@ module.exports = {
     'max-depth': ['warn', 3],
     'max-params': ['warn', 3],
     'no-alert': 'error',
-    'no-console': 'error',
+    'no-console': 'warn', // turn back on after greenfield work
     'no-else-return': 'warn',
     'no-magic-numbers': ['warn', { ignoreArrayIndexes: true, enforceConst: true, detectObjects: false }],
     'no-mixed-operators': 'warn',

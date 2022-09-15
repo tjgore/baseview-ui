@@ -5,7 +5,6 @@ export type HttpRequestType = {
 };
 
 export type NextRequestType = () => AxiosPromise;
-
 export type HttpRequestError = AxiosError;
 
 export const axios = Axios.create({

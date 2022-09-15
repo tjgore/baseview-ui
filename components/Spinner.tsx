@@ -1,7 +1,9 @@
-const Spinner = () => {
+import ctl from '@netlify/classnames-template-literals';
+
+const Spinner = ({ className, size, color }: { className?: string; size?: string; color?: string }) => {
   return (
     <svg
-      className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
+      className={ctl(`animate-spin ${className ?? ''} ${size ?? 'h-5 w-5'} ${color ?? 'text-white'}`)}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24">
@@ -11,7 +13,7 @@ const Spinner = () => {
         cy="12"
         r="10"
         stroke="currentColor"
-        stroke-width="4"
+        strokeWidth="4"
       />
       <path
         className="opacity-75"

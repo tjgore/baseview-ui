@@ -1,8 +1,14 @@
-import { Fragment, useEffect } from 'react';
+import { Fragment } from 'react';
 import type { NextPage } from 'next';
+import FocusLock from 'react-focus-lock';
+
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { classNames } from '../../../utils/helpers';
+import useAuth from '../../../hooks/useAuth';
+import Spinner from '../../../components/Spinner';
 
 const user = {
   name: 'Tom Cook',
@@ -18,23 +24,37 @@ const navigation = [
 ];
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Sign out', href: '/logout' },
 ];
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
-
 const Overview: NextPage = () => {
+  const { isLoading } = useAuth({ middleware: 'auth' });
   const router = useRouter();
   const { id } = router.query;
-  // console.log('school render', router.query);
-  useEffect(() => {
-    // console.log('school overview page useeffect url param', id);
-  }, [id]);
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="min-h-full">
+        {isLoading ? (
+          <FocusLock>
+            <div className="fixed left-0 h-full w-full bg-gray-900 opacity-80">
+              <div className="mx-auto flex min-h-screen w-full items-center justify-center">
+                <div>
+                  <Spinner
+                    className="mx-auto"
+                    size="h-14 w-14"
+                  />
+                  <p
+                    tabIndex={0}
+                    aria-label="Page is Loading"
+                    className="mt-3 rounded p-3 text-3xl font-semibold text-white focus:ring-blue-500  ">
+                    Loading...
+                  </p>
+                </div>
+              </div>
+            </div>
+          </FocusLock>
+        ) : null}
         <Disclosure
           as="nav"
           className="bg-gray-800">
@@ -122,11 +142,9 @@ const Overview: NextPage = () => {
                             {userNavigation.map(item => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
-                                  <a
-                                    href={item.href}
-                                    className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
-                                    {item.name}
-                                  </a>
+                                  <Link href={item.href}>
+                                    <a className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200')}>{item.name}</a>
+                                  </Link>
                                 )}
                               </Menu.Item>
                             ))}
