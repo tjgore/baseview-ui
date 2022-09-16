@@ -1,56 +1,41 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { auth } from '../services/api';
-import { HttpRequestError } from '../services/HttpClient';
-import { LoginDataType } from '../types';
-import { UNAUTHENTICATED } from '../utils/constants';
+import useUser from './useUser';
 
 type UseAuthType = {
-  middleware: string;
+  middleware?: string;
 };
 
-const redirectIfAuth = '/schools/1/overview';
-
-const useAuth = ({ middleware }: UseAuthType) => {
+const useAuth = ({ middleware }: UseAuthType = {}) => {
+  const { user, isLoading, isFetching, error, refetchUser } = useUser();
   const router = useRouter();
 
-  const queryClient = useQueryClient();
-  const {
-    data: user,
-    isLoading,
-    isFetching,
-    error,
-  } = useQuery(['user'], auth.user, {
-    staleTime: 60,
-    retry: (failureCount, error: HttpRequestError) => error.response?.status !== UNAUTHENTICATED,
-  });
-
-  const login = async (data: LoginDataType) => {
-    await auth.login(data);
-    queryClient.invalidateQueries(['user']);
+  const redirectIfAuth = () => {
+    // use user data to build url to redirect
+    // then use router to go there
+    router.push('/schools/1/overview');
   };
 
-  const logout = useCallback(async () => {
-    try {
-      await auth.logout();
-    } catch (err) {
-      console.log('logout error', err);
-    }
-    window.location.pathname = '/login';
-  }, []);
-
+  /**
+   * If the user is on a public page but has a user, send them to their own dashboard
+   */
   useEffect(() => {
-    if (middleware === 'guest' && redirectIfAuth && user) router.push(redirectIfAuth);
-    if (middleware === 'auth' && error) router.push('/logout');
-  }, [user, error, middleware, router]);
+    if (middleware === 'guest' && user) redirectIfAuth();
+  }, [user, middleware, redirectIfAuth]);
+
+  /**
+   * If the user is on a protected page but the user request errored out, kick them to login
+   */
+  useEffect(() => {
+    if (middleware === 'auth' && error) router.push('/login');
+  }, [middleware, error, router]);
 
   return {
     user,
     isLoading,
     isFetching,
-    login,
-    logout,
+    error,
+    refetchUser,
   };
 };
 

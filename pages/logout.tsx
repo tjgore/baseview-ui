@@ -1,18 +1,31 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
+import { useRouter } from 'next/router';
 import useAuth from '../hooks/useAuth';
+import { auth } from '../services/api';
 
 const Logout = () => {
-  const { logout } = useAuth({ middleware: 'auth' });
+  const router = useRouter();
+  const { user, isLoading, isFetching } = useAuth({ middleware: 'auth' });
+
+  const goToLogin = () => (window.location.pathname = '/login');
+
+  const hasFetchedUser = !isLoading && !isFetching && user;
+
+  const logout = useCallback(async () => {
+    try {
+      await auth.logout();
+      goToLogin();
+    } catch (err) {
+      // Toast user with error
+      router.back();
+    }
+  }, [router]);
 
   useEffect(() => {
     (async () => {
-      try {
-        await logout();
-      } catch (err) {
-        console.log(err);
-      }
+      if (hasFetchedUser) await logout();
     })();
-  }, [logout]);
+  }, [user, hasFetchedUser, logout]);
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center">
