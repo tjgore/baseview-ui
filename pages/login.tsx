@@ -4,8 +4,7 @@ import useAuth from '../hooks/useAuth';
 import { NextPageWithLayout } from './_app';
 import { validateField } from '../services/Validation';
 import { LoginDataType, isErrorResponse } from '../types';
-import { UNAUTHENTICATED, UNPROCESSABLE_ENTITY } from '../utils/constants';
-import { resetForm } from '../utils/helpers';
+import { canHandleError, resetForm, isInvalidResponse } from '../utils/helpers';
 import Spinner from '../components/Spinner';
 import { getLayout } from '../components/Layouts/FullPageLayout';
 import { auth } from '../services/api';
@@ -20,34 +19,37 @@ const Login: NextPageWithLayout = () => {
   const { user, isLoading, error, refetchUser } = useAuth({ middleware: 'guest' });
   const [showHeadingError, setHeadingError] = useState(false);
   const [pageLoading, setPageLoading] = useState(isLoading);
+  const [loginLoading, setLoginLoading] = useState(false);
 
   const {
     register,
     resetField,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm();
 
   const onSubmit: SubmitHandler<FieldValues> = async data => {
     setHeadingError(false);
+    setLoginLoading(true);
     try {
       await auth.login(data as LoginDataType);
       refetchUser();
     } catch (err) {
-      if (isErrorResponse(err) && err?.response?.status === UNPROCESSABLE_ENTITY) {
+      if (isErrorResponse(err) && isInvalidResponse(err)) {
         setHeadingError(true);
       }
+      setLoginLoading(false);
     }
     resetForm(resetField, ['email', 'password']);
   };
 
   useEffect(() => {
-    if (user) {
+    if (user && !error) {
       setPageLoading(true);
-    } else if ((isLoading && error && error.response?.status === UNPROCESSABLE_ENTITY) || error?.response?.status === UNAUTHENTICATED) {
+    } else if (!isLoading && canHandleError(error)) {
       setPageLoading(false);
     }
-  }, [isLoading, error, user]);
+  }, [error, isLoading, user]);
 
   if (pageLoading) {
     return <PageLoading dark />;
@@ -60,19 +62,20 @@ const Login: NextPageWithLayout = () => {
           <div className="flex items-center justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              fill="none"
               viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
+              fill="currentColor"
               className="mr-2 h-8 w-8 text-blue-700">
               <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M7.875 14.25l1.214 1.942a2.25 2.25 0 001.908 1.058h2.006c.776 0 1.497-.4 1.908-1.058l1.214-1.942M2.41 9h4.636a2.25 2.25 0 011.872
-                      1.002l.164.246a2.25 2.25 0 001.872 1.002h2.092a2.25 2.25 0 001.872-1.002l.164-.246A2.25 2.25 0 0116.954 9h4.636M2.41 9a2.25 2.25
-                        0 00-.16.832V12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 12V9.832c0-.287-.055-.57-.16-.832M2.41
-                        9a2.25 2.25 0 01.382-.632l3.285-3.832a2.25 2.25 0 011.708-.786h8.43c.657 0 1.281.287 1.709.786l3.284 3.832c.163.19.291.404.382.632M4.5
-                          20.25h15A2.25 2.25 0 0021.75 18v-2.625c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125V18a2.25 2.25 0 002.25 2.25z"
+                fillRule="evenodd"
+                d="M1.5 9.832v1.793c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875V9.832a3 3 0 00-.722-1.952l-3.285-3.832A3
+                        3 0 0016.215 3h-8.43a3 3 0 00-2.278 1.048L2.222 7.88A3 3 0 001.5 9.832zM7.785 4.5a1.5 1.5 0 00-1.139.524L3.881 8.25h3.165a3
+                        3 0 012.496 1.336l.164.246a1.5 1.5 0 001.248.668h2.092a1.5 1.5 0 001.248-.668l.164-.246a3 3 0
+                        012.496-1.336h3.165l-2.765-3.226a1.5 1.5 0 00-1.139-.524h-8.43z"
+                clipRule="evenodd"
+              />
+              <path
+                d="M2.813 15c-.725 0-1.313.588-1.313 1.313V18a3 3 0 003 3h15a3 3 0 003-3v-1.688c0-.724-.588-1.312-1.313-1.312h-4.233a3
+                      3 0 00-2.496 1.336l-.164.246a1.5 1.5 0 01-1.248.668h-2.092a1.5 1.5 0 01-1.248-.668l-.164-.246A3 3 0 007.046 15H2.812z"
               />
             </svg>
             <p className="text-2xl font-medium text-gray-900">Baseview</p>
@@ -138,12 +141,12 @@ const Login: NextPageWithLayout = () => {
               </div>
               <div>
                 <button
-                  disabled={isSubmitting}
+                  disabled={loginLoading}
                   type="submit"
-                  className="flex w-full justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4
-                          text-base font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none
-                          focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                  {isSubmitting ? (
+                  className="flex w-full justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-base
+                          font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2
+                          focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-blue-200">
+                  {loginLoading ? (
                     <div className="flex items-center">
                       <Spinner className="mr-3" /> Loading...
                     </div>

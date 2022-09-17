@@ -1,9 +1,10 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { getLayout as getAppLayout } from './AppLayout';
-import { classNames } from '../../utils/helpers';
+import { classNames, charLimit } from '../../utils/helpers';
 
 const user = {
   name: 'Tom Cook',
@@ -12,26 +13,33 @@ const user = {
 };
 const navigation = [
   { name: 'Overview', href: '/schools/1/overview', current: true },
-  { name: 'Schools', href: '/schools', current: false },
   { name: 'Classes', href: '/classes', current: false },
   { name: 'Teachers', href: '#', current: false },
   { name: 'Students', href: '#', current: false },
 ];
 const userNavigation = [
-  { name: 'Your Profile', href: '#' },
+  { name: 'Account', href: '#' },
   { name: 'Sign out', href: '/logout' },
 ];
 
 const UserLayout = ({ children }) => {
-  const [activeNav, setActiveNav] = useState(navigation);
+  const router = useRouter();
+  const { pathname } = router;
+  const [nav, setNav] = useState(navigation);
 
   const updateActiveNav = name => {
-    const updatedNav = activeNav.map(nav => {
-      nav.current = nav.name === name;
-      return nav;
+    const updatedNav = nav.map(navItem => {
+      navItem.current = navItem.name === name;
+      return navItem;
     });
-    setActiveNav(updatedNav);
+    setNav(updatedNav);
   };
+
+  useEffect(() => {
+    if (pathname === '/schools') {
+      setNav([{ name: 'Schools', href: '/schools', current: true }]);
+    } else setNav(navigation);
+  }, [pathname]);
 
   return (
     <div className="min-h-full ">
@@ -43,28 +51,29 @@ const UserLayout = ({ children }) => {
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div className="flex h-16 items-center justify-between">
                 <div className="flex items-center">
-                  <div className="shrink-0 rounded bg-white p-1">
+                  <div className="shrink-0 rounded bg-gray-100 p-1">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
                       viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="h-8 w-8 text-blue-700">
+                      fill="currentColor"
+                      className="h-6 w-6 text-blue-700">
                       <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M7.875 14.25l1.214 1.942a2.25 2.25 0 001.908 1.058h2.006c.776 0 1.497-.4 1.908-1.058l1.214-1.942M2.41 9h4.636a2.25 2.25 0 011.872
-                  1.002l.164.246a2.25 2.25 0 001.872 1.002h2.092a2.25 2.25 0 001.872-1.002l.164-.246A2.25 2.25 0 0116.954 9h4.636M2.41 9a2.25 2.25
-                    0 00-.16.832V12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 12V9.832c0-.287-.055-.57-.16-.832M2.41
-                    9a2.25 2.25 0 01.382-.632l3.285-3.832a2.25 2.25 0 011.708-.786h8.43c.657 0 1.281.287 1.709.786l3.284 3.832c.163.19.291.404.382.632M4.5
-                      20.25h15A2.25 2.25 0 0021.75 18v-2.625c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125V18a2.25 2.25 0 002.25 2.25z"
+                        fillRule="evenodd"
+                        d="M1.5 9.832v1.793c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875V9.832a3 3 0 00-.722-1.952l-3.285-3.832A3
+                        3 0 0016.215 3h-8.43a3 3 0 00-2.278 1.048L2.222 7.88A3 3 0 001.5 9.832zM7.785 4.5a1.5 1.5 0 00-1.139.524L3.881 8.25h3.165a3
+                        3 0 012.496 1.336l.164.246a1.5 1.5 0 001.248.668h2.092a1.5 1.5 0 001.248-.668l.164-.246a3 3 0
+                        012.496-1.336h3.165l-2.765-3.226a1.5 1.5 0 00-1.139-.524h-8.43z"
+                        clipRule="evenodd"
+                      />
+                      <path
+                        d="M2.813 15c-.725 0-1.313.588-1.313 1.313V18a3 3 0 003 3h15a3 3 0 003-3v-1.688c0-.724-.588-1.312-1.313-1.312h-4.233a3
+                      3 0 00-2.496 1.336l-.164.246a1.5 1.5 0 01-1.248.668h-2.092a1.5 1.5 0 01-1.248-.668l-.164-.246A3 3 0 007.046 15H2.812z"
                       />
                     </svg>
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-10 flex items-baseline space-x-4">
-                      {activeNav.map(item => (
+                      {nav.map(item => (
                         <Link
                           key={item.name}
                           href={item.href}>
@@ -86,7 +95,7 @@ const UserLayout = ({ children }) => {
                   <div className="ml-4 flex items-center md:ml-6">
                     <button
                       type="button"
-                      className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2
+                      className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:text-white focus:outline-none focus:ring-1
                         focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="sr-only">View notifications</span>
                       <BellIcon
@@ -102,13 +111,21 @@ const UserLayout = ({ children }) => {
                       <div>
                         <Menu.Button
                           className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm text-white 
-                            focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                            focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                           <span className="sr-only">Open user menu</span>
-                          <img
-                            className="h-8 w-8 rounded-full"
-                            src={user.imageUrl}
-                            alt=""
-                          />
+                          {user.imageUrl ? (
+                            <img
+                              className="h-8 w-8 rounded-full"
+                              src={user.imageUrl}
+                              alt=""
+                            />
+                          ) : (
+                            <div className="h-8 w-8 rounded-full bg-gray-200" />
+                          )}
+                          <div className="ml-2 flex flex-col items-start">
+                            <p className="text-xs font-semibold">{charLimit('Sarah Cornner', 10)}</p>
+                            <p className="text-xs">Teacher</p>
+                          </div>
                         </Menu.Button>
                       </div>
                       <Transition

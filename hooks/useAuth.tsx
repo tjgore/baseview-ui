@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import useUser from './useUser';
 
@@ -10,18 +10,16 @@ const useAuth = ({ middleware }: UseAuthType = {}) => {
   const { user, isLoading, isFetching, error, refetchUser } = useUser();
   const router = useRouter();
 
-  const redirectIfAuth = () => {
-    // use user data to build url to redirect
-    // then use router to go there
-    router.push('/schools/1/overview');
-  };
+  const redirectIfAuth = useCallback(() => {
+    router.push('/schools');
+  }, [router]);
 
   /**
    * If the user is on a public page but has a user, send them to their own dashboard
    */
   useEffect(() => {
-    if (middleware === 'guest' && user) redirectIfAuth();
-  }, [user, middleware, redirectIfAuth]);
+    if (middleware === 'guest' && user && !error) redirectIfAuth();
+  }, [user, error, middleware, redirectIfAuth]);
 
   /**
    * If the user is on a protected page but the user request errored out, kick them to login
