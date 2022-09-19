@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import useUser from './useUser';
+import { isUnauthenticatedError } from '../utils/helpers';
 
 type UseAuthType = {
   middleware?: string;
@@ -25,7 +26,7 @@ const useAuth = ({ middleware }: UseAuthType = {}) => {
    * If the user is on a protected page but the user request errored out, kick them to login
    */
   useEffect(() => {
-    if (middleware === 'auth' && error) router.push('/login');
+    if (middleware === 'auth' && isUnauthenticatedError(error)) router.push('/login');
   }, [middleware, error, router]);
 
   return {

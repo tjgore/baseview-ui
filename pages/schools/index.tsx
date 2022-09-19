@@ -1,23 +1,9 @@
 import Link from 'next/link';
 import { HomeModernIcon } from '@heroicons/react/24/outline';
 import type { NextPageWithLayout } from '../_app';
-import useAuth from '../../hooks/useAuth';
 import { getLayout } from '../../components/Layouts/UserLayout';
-import PageLoading from '../../components/Loading/Page';
-import { canHandleError } from '../../utils/helpers';
-import Error from '../../components/Error';
 
 const Overview: NextPageWithLayout = () => {
-  const { isLoading, error } = useAuth({ middleware: 'auth' });
-
-  if (isLoading || canHandleError(error)) {
-    return <PageLoading dark />;
-  }
-
-  if (error && !canHandleError(error)) {
-    return <Error dark />;
-  }
-
   return (
     <>
       <header className="bg-white shadow-sm">
@@ -25,6 +11,7 @@ const Overview: NextPageWithLayout = () => {
           <div className="md:flex md:items-center md:justify-between">
             <div className="min-w-0 flex-1">
               <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">My Schools</h2>
+              <p className="pt-1 text-sm text-gray-500 md:block">A listing of all the schools you belong to.</p>
             </div>
             <div className="mt-4 flex md:mt-0 md:ml-4">
               <button

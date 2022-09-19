@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
 import useAuth from '../hooks/useAuth';
 import { NextPageWithLayout } from './_app';
@@ -9,6 +9,7 @@ import Spinner from '../components/Spinner';
 import { getLayout } from '../components/Layouts/FullPageLayout';
 import { auth } from '../services/api';
 import PageLoading from '../components/Loading/Page';
+import Error from '../components/Error';
 
 const loginValidation = {
   email: (value: string) => validateField({ email: value }, 'required|email'),
@@ -18,7 +19,6 @@ const loginValidation = {
 const Login: NextPageWithLayout = () => {
   const { user, isLoading, error, refetchUser } = useAuth({ middleware: 'guest' });
   const [showHeadingError, setHeadingError] = useState(false);
-  const [pageLoading, setPageLoading] = useState(isLoading);
   const [loginLoading, setLoginLoading] = useState(false);
 
   const {
@@ -43,16 +43,12 @@ const Login: NextPageWithLayout = () => {
     resetForm(resetField, ['email', 'password']);
   };
 
-  useEffect(() => {
-    if (user && !error) {
-      setPageLoading(true);
-    } else if (!isLoading && canHandleError(error)) {
-      setPageLoading(false);
-    }
-  }, [error, isLoading, user]);
-
-  if (pageLoading) {
+  if (user || isLoading) {
     return <PageLoading dark />;
+  }
+
+  if (error && !canHandleError(error)) {
+    return <Error dark />;
   }
 
   return (

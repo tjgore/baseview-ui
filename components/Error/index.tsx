@@ -2,7 +2,6 @@ import ctl from '@netlify/classnames-template-literals';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 const Error = ({ dark, message }: { dark?: boolean; message?: string }) => {
-  // const spinnerClassName = ctl(`${dark ? 'text-gray-900' : 'text-white'}`);
   const textClassName = ctl(`${dark ? 'text-gray-900' : 'text-white'} mt-3 whitespace-pre-line rounded p-3 text-center text-xl font-semibold`);
 
   return (

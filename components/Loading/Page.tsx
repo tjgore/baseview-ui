@@ -3,14 +3,14 @@ import Spinner from '../Spinner';
 
 const PageLoading = ({ dark }: { dark?: boolean }) => {
   const spinnerClassName = ctl(`${dark ? 'text-gray-900' : 'text-white'}`);
-  const textClassName = ctl(`${dark ? 'text-gray-900' : 'text-white'} mt-3 rounded p-3 text-3xl font-semibold`);
+  const textClassName = ctl(`${dark ? 'text-gray-900' : 'text-white'} mt-3 rounded p-3 text-xl font-semibold`);
 
   return (
     <div className="relative mx-auto -mt-32 flex min-h-screen w-full items-center justify-center bg-gray-100">
       <div>
         <Spinner
           className="mx-auto"
-          size="h-14 w-14"
+          size="h-10 w-10"
           color={spinnerClassName}
         />
         <p

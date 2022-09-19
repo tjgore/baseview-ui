@@ -3,7 +3,7 @@
  */
 const AppLayout = ({ children }) => {
   return (
-    <div className="min-h-screen overflow-hidden bg-gray-100 font-sans antialiased">
+    <div className="min-h-screen overflow-hidden bg-gray-100 font-sans text-sm text-gray-700 antialiased">
       <div>{children}</div>
     </div>
   );

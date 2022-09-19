@@ -2,6 +2,7 @@ import { useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import useAuth from '../hooks/useAuth';
 import { auth } from '../services/api';
+import Spinner from '../components/Spinner';
 
 const Logout = () => {
   const router = useRouter();
@@ -28,7 +29,8 @@ const Logout = () => {
   }, [user, hasFetchedUser, logout]);
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center">
+    <div className="flex min-h-screen w-full flex-col items-center justify-center">
+      <Spinner className="mx-auto h-10 w-10 text-gray-900" />
       <p className="text-3xl font-semibold">Logging out now</p>
     </div>
   );

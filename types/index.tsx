@@ -1,18 +1,23 @@
+import { z } from 'zod';
+
 export type LoginDataType = {
   email: string;
   password: string;
 };
 
-export type ErrorResponseType = {
-  response?: {
-    data: {
-      message: string;
-    };
-    status: number;
-  };
-};
+const errorResponseSchema = z.object({
+  response: z.object({
+    config: z.object({
+      baseURL: z.string(),
+      url: z.string(),
+    }),
+    data: z.object({
+      message: z.string(),
+    }),
+    status: z.number(),
+  }),
+});
 
-export const isErrorResponse = (error: unknown): error is ErrorResponseType => {
-  const validError = error as ErrorResponseType;
-  return validError?.response?.data?.message !== undefined && validError?.response?.status !== undefined;
-};
+export type ErrorResponseType = z.infer<typeof errorResponseSchema>;
+
+export const isErrorResponse = (error: unknown): error is ErrorResponseType => errorResponseSchema.safeParse(error).success;

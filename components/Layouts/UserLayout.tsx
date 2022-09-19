@@ -3,14 +3,16 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { getLayout as getAppLayout } from './AppLayout';
-import { classNames, charLimit } from '../../utils/helpers';
+import { classNames, charLimit, canHandleError } from '../../utils/helpers';
+import useAuth from '../../hooks/useAuth';
+import PageLoading from '../Loading/Page';
+import Error from '../Error';
 
-const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-};
+// User image 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+
 const navigation = [
   { name: 'Overview', href: '/schools/1/overview', current: true },
   { name: 'Classes', href: '/classes', current: false },
@@ -26,6 +28,7 @@ const UserLayout = ({ children }) => {
   const router = useRouter();
   const { pathname } = router;
   const [nav, setNav] = useState(navigation);
+  const { user, isLoading, isFetching, error } = useAuth({ middleware: 'auth' });
 
   const updateActiveNav = name => {
     const updatedNav = nav.map(navItem => {
@@ -41,8 +44,33 @@ const UserLayout = ({ children }) => {
     } else setNav(navigation);
   }, [pathname]);
 
+  if (isLoading || isFetching || canHandleError(error)) {
+    return <PageLoading dark />;
+  }
+
+  if (error && !canHandleError(error)) {
+    return <Error dark />;
+  }
+
+  const { imageUrl, email, first_name, last_name } = user ?? {};
+  // eslint-disable-next-line no-magic-numbers
+  const fullName = charLimit(`${first_name ?? ''} ${last_name ?? ''}`, 10);
+
   return (
-    <div className="min-h-full ">
+    <div className="min-h-full">
+      <ToastContainer
+        bodyClassName="!mb-3 !flex !items-start font-sans"
+        position="top-right"
+        icon={true}
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Disclosure
         as="nav"
         className="bg-gray-800">
@@ -60,14 +88,14 @@ const UserLayout = ({ children }) => {
                       <path
                         fillRule="evenodd"
                         d="M1.5 9.832v1.793c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875V9.832a3 3 0 00-.722-1.952l-3.285-3.832A3
-                        3 0 0016.215 3h-8.43a3 3 0 00-2.278 1.048L2.222 7.88A3 3 0 001.5 9.832zM7.785 4.5a1.5 1.5 0 00-1.139.524L3.881 8.25h3.165a3
-                        3 0 012.496 1.336l.164.246a1.5 1.5 0 001.248.668h2.092a1.5 1.5 0 001.248-.668l.164-.246a3 3 0
-                        012.496-1.336h3.165l-2.765-3.226a1.5 1.5 0 00-1.139-.524h-8.43z"
+                          3 0 0016.215 3h-8.43a3 3 0 00-2.278 1.048L2.222 7.88A3 3 0 001.5 9.832zM7.785 4.5a1.5 1.5 0 00-1.139.524L3.881 8.25h3.165a3
+                          3 0 012.496 1.336l.164.246a1.5 1.5 0 001.248.668h2.092a1.5 1.5 0 001.248-.668l.164-.246a3 3 0
+                          012.496-1.336h3.165l-2.765-3.226a1.5 1.5 0 00-1.139-.524h-8.43z"
                         clipRule="evenodd"
                       />
                       <path
                         d="M2.813 15c-.725 0-1.313.588-1.313 1.313V18a3 3 0 003 3h15a3 3 0 003-3v-1.688c0-.724-.588-1.312-1.313-1.312h-4.233a3
-                      3 0 00-2.496 1.336l-.164.246a1.5 1.5 0 01-1.248.668h-2.092a1.5 1.5 0 01-1.248-.668l-.164-.246A3 3 0 007.046 15H2.812z"
+                        3 0 00-2.496 1.336l-.164.246a1.5 1.5 0 01-1.248.668h-2.092a1.5 1.5 0 01-1.248-.668l-.164-.246A3 3 0 007.046 15H2.812z"
                       />
                     </svg>
                   </div>
@@ -96,7 +124,7 @@ const UserLayout = ({ children }) => {
                     <button
                       type="button"
                       className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:text-white focus:outline-none focus:ring-1
-                        focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                          focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="sr-only">View notifications</span>
                       <BellIcon
                         className="h-6 w-6"
@@ -111,20 +139,19 @@ const UserLayout = ({ children }) => {
                       <div>
                         <Menu.Button
                           className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm text-white 
-                            focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                              focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                           <span className="sr-only">Open user menu</span>
-                          {user.imageUrl ? (
+                          {imageUrl ? (
                             <img
                               className="h-8 w-8 rounded-full"
-                              src={user.imageUrl}
-                              alt=""
+                              src={imageUrl}
+                              alt="User avatar"
                             />
                           ) : (
                             <div className="h-8 w-8 rounded-full bg-gray-200" />
                           )}
                           <div className="ml-2 flex flex-col items-start">
-                            <p className="text-xs font-semibold">{charLimit('Sarah Cornner', 10)}</p>
-                            <p className="text-xs">Teacher</p>
+                            <p className="text-xs font-semibold">{fullName}</p>
                           </div>
                         </Menu.Button>
                       </div>
@@ -138,7 +165,7 @@ const UserLayout = ({ children }) => {
                         leaveTo="transform opacity-0 scale-95">
                         <Menu.Items
                           className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md
-                          bg-white py-1 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
+                            bg-white py-1 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
                           {userNavigation.map(item => (
                             <Menu.Item key={item.name}>
                               {({ active }) => (
@@ -157,7 +184,7 @@ const UserLayout = ({ children }) => {
                   {/* Mobile menu button */}
                   <Disclosure.Button
                     className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700
-                    hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                      hover:text-white focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                     <span className="sr-only">Open main menu</span>
                     {open ? (
                       <XMarkIcon
@@ -194,20 +221,24 @@ const UserLayout = ({ children }) => {
               <div className="border-t border-gray-700 pt-4 pb-3">
                 <div className="flex items-center px-5">
                   <div className="shrink-0">
-                    <img
-                      className="h-10 w-10 rounded-full"
-                      src={user.imageUrl}
-                      alt=""
-                    />
+                    {imageUrl ? (
+                      <img
+                        className="h-8 w-8 rounded-full"
+                        src={imageUrl}
+                        alt="User avatar"
+                      />
+                    ) : (
+                      <div className="h-8 w-8 rounded-full bg-gray-200" />
+                    )}
                   </div>
                   <div className="ml-3">
-                    <div className="text-base font-medium text-white">{user.name}</div>
-                    <div className="text-sm font-medium text-gray-400">{user.email}</div>
+                    <div className="text-base font-medium text-white">{fullName}</div>
+                    <div className="text-sm font-medium text-gray-400">{email}</div>
                   </div>
                   <button
                     type="button"
                     className="ml-auto shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2
-                      focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                        focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                     <span className="sr-only">View notifications</span>
                     <BellIcon
                       className="h-6 w-6"

@@ -30,17 +30,10 @@ module.exports = {
     '@typescript-eslint/prefer-optional-chain': 'warn',
     '@typescript-eslint/prefer-string-starts-ends-with': 'warn',
     '@typescript-eslint/no-floating-promises': 'off',
-    '@typescript-eslint/naming-convention': [
-      'error',
-      {
-        format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
-        selector: 'default',
-        leadingUnderscore: 'allow',
-      },
-    ],
     '@typescript-eslint/no-confusing-void-expression': 'off',
     '@typescript-eslint/no-duplicate-enum-values': 'warn',
     '@typescript-eslint/no-misused-promises': ['warn', { checksVoidReturn: false }],
+    '@typescript-eslint/restrict-template-expressions': 'off',
     'react/function-component-definition': [
       'error',
       {
