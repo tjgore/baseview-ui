@@ -1,4 +1,5 @@
 import Axios, { AxiosRequestConfig, AxiosPromise, AxiosError } from 'axios';
+import { z } from 'zod';
 
 export type HttpRequestType = {
   [name: string]: (url: string, config?: AxiosRequestConfig) => AxiosPromise;
@@ -7,14 +8,13 @@ export type HttpRequestType = {
 export type NextRequestType = () => AxiosPromise;
 export type HttpRequestError = AxiosError;
 
-type ResponseType = {
-  data: any;
-};
+const responseSchema = z.object({
+  data: z.any(),
+});
 
-const isResponseType = (response: unknown): response is ResponseType => {
-  const validResponse = response as ResponseType;
-  return validResponse?.data !== undefined;
-};
+type ResponseType = z.infer<typeof responseSchema>;
+
+const isResponseType = (response: unknown): response is ResponseType => responseSchema.safeParse(response).success;
 
 export const axios = Axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
