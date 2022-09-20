@@ -29,6 +29,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         defaultOptions: {
           queries: {
             refetchOnWindowFocus: process.env.NEXT_PUBLIC_APP_ENV === 'prod' ? 'always' : false,
+            retry: 2,
             onError: error => {
               if (shouldClearUserCache(error)) {
                 setCacheName(['user']);

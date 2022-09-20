@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import useAuth from '../hooks/useAuth';
-import { auth } from '../services/api';
+import { auth } from '../utils/api';
 import Spinner from '../components/Spinner';
 
 const Logout = () => {

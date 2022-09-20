@@ -1,5 +1,6 @@
+import { ErrorResponseType } from '@/types/index';
 import { UNAUTHENTICATED, UNPROCESSABLE_ENTITY } from './constants';
-import { ErrorResponseType } from '../types';
+
 /**
  * Clear Form fields
  *

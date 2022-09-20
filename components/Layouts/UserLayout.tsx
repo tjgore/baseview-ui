@@ -9,7 +9,7 @@ import { getLayout as getAppLayout } from './AppLayout';
 import { classNames, charLimit, canHandleError } from '../../utils/helpers';
 import useAuth from '../../hooks/useAuth';
 import PageLoading from '../Loading/Page';
-import Error from '../Error';
+import Error from '../Error/Page';
 
 // User image 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
 
@@ -44,7 +44,7 @@ const UserLayout = ({ children }) => {
     } else setNav(navigation);
   }, [pathname]);
 
-  if (isLoading || isFetching || canHandleError(error)) {
+  if (!user && (isLoading || isFetching || canHandleError(error))) {
     return <PageLoading dark />;
   }
 

@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { isUnauthenticatedError } from '@/utils/helpers';
 import useUser from './useUser';
-import { isUnauthenticatedError } from '../utils/helpers';
 
 type UseAuthType = {
   middleware?: string;

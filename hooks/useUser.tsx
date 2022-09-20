@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
-import { auth } from '../services/api';
-import { ErrorResponseType } from '../types';
-import { isUnauthenticatedError } from '../utils/helpers';
+import { auth } from '@/utils/api/index';
+import { ErrorResponseType } from '@/types/index';
+import { isUnauthenticatedError } from '@/utils/helpers';
 
 const userSchema = z.object({
   user: z.object({
@@ -23,7 +23,7 @@ const userSchema = z.object({
 });
 
 const RETRY_REQUEST = 3;
-const STALE_MILLISECONDS = 10000;
+const STALE_MILLISECONDS = 60000;
 
 export type User = z.infer<typeof userSchema>;
 

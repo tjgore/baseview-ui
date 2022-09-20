@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
-import useAuth from '../hooks/useAuth';
+import useAuth from '@/hooks/useAuth';
+import { validateField } from '@/services/Validation';
+import { LoginDataType, isErrorResponse } from '@/types/index';
+import { canHandleError, resetForm, isInvalidResponse } from '@/utils/helpers';
+import Spinner from '@/components/Spinner';
+import { getLayout } from '@/components/Layouts/FullPageLayout';
+import { auth } from '@/utils/api';
+import PageLoading from '@/components/Loading/Page';
+import Error from '@/components/Error/Page';
 import { NextPageWithLayout } from './_app';
-import { validateField } from '../services/Validation';
-import { LoginDataType, isErrorResponse } from '../types';
-import { canHandleError, resetForm, isInvalidResponse } from '../utils/helpers';
-import Spinner from '../components/Spinner';
-import { getLayout } from '../components/Layouts/FullPageLayout';
-import { auth } from '../services/api';
-import PageLoading from '../components/Loading/Page';
-import Error from '../components/Error';
 
 const loginValidation = {
   email: (value: string) => validateField({ email: value }, 'required|email'),

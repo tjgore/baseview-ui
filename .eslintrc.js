@@ -48,6 +48,7 @@ module.exports = {
         html: true,
       },
     ],
+    'import/no-unresolved': 'off',
     'no-constructor-return': 'warn',
     'no-duplicate-imports': 'error',
     'no-template-curly-in-string': 'warn',

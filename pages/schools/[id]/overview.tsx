@@ -4,14 +4,9 @@ import { toast } from 'react-toastify';
 import { NextPageWithLayout } from '../../_app';
 import useAuth from '../../../hooks/useAuth';
 import { getLayout } from '../../../components/Layouts/UserLayout';
-import PageLoading from '../../../components/Loading/Page';
 
 const Overview: NextPageWithLayout = () => {
-  const { isLoading, error } = useAuth({ middleware: 'auth' });
-
-  if (isLoading || error) {
-    return <PageLoading dark />;
-  }
+  useAuth({ middleware: 'auth' });
 
   return (
     <>
