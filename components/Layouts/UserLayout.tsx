@@ -39,7 +39,7 @@ const UserLayout = ({ children }) => {
   };
 
   useEffect(() => {
-    if (pathname === '/schools') {
+    if (['/schools', '/schools/create'].includes(pathname)) {
       setNav([{ name: 'Schools', href: '/schools', current: true }]);
     } else setNav(navigation);
   }, [pathname]);
@@ -204,7 +204,7 @@ const UserLayout = ({ children }) => {
 
             <Disclosure.Panel className="md:hidden">
               <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-                {navigation.map(item => (
+                {nav.map(item => (
                   <Disclosure.Button
                     key={item.name}
                     as="a"

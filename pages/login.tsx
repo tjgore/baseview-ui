@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
 import useAuth from '@/hooks/useAuth';
-import { validateField } from '@/services/Validation';
+import { addValidation } from '@/services/Validation';
 import { LoginDataType, isErrorResponse } from '@/types/index';
 import { canHandleError, resetForm, isInvalidResponse } from '@/utils/helpers';
 import Spinner from '@/components/Spinner';
@@ -11,10 +11,16 @@ import PageLoading from '@/components/Loading/Page';
 import Error from '@/components/Error/Page';
 import { NextPageWithLayout } from './_app';
 
-const loginValidation = {
-  email: (value: string) => validateField({ email: value }, 'required|email'),
-  password: (value: string) => validateField({ password: value }, 'string|required'),
+const loginFields = {
+  email: {
+    rules: 'required|email',
+  },
+  password: {
+    rules: 'string|required',
+  },
 };
+
+const loginForm = addValidation(loginFields);
 
 const Login: NextPageWithLayout = () => {
   const { user, isLoading, error, refetchUser } = useAuth({ middleware: 'guest' });
@@ -92,38 +98,38 @@ const Login: NextPageWithLayout = () => {
               onSubmit={handleSubmit(onSubmit)}>
               <div>
                 <label
-                  htmlFor="email"
+                  htmlFor={loginForm.email.id}
                   className="block text-sm font-medium text-gray-700">
                   Email address
                 </label>
                 <div className="mt-1">
                   <input
-                    id="email"
+                    id={loginForm.email.id}
                     type="email"
-                    autoComplete="email"
-                    {...register('email', { validate: loginValidation.email })}
-                    className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 shadow-sm placeholder:text-gray-400 focus:border-blue-500
-                            focus:outline-none focus:ring-blue-500 sm:text-sm"
+                    autoComplete={loginForm.email.id}
+                    {...register(loginForm.email.id, loginForm.email.validate)}
+                    className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 shadow-sm placeholder:text-gray-400 focus:border-blue-300
+                            focus:outline-none focus:ring-blue-300 sm:text-sm"
                   />
-                  <p className="pt-1 text-sm text-red-500">{errors?.email?.message as string}</p>
+                  <p className="pt-1 text-xs text-red-500">{errors?.email?.message as string}</p>
                 </div>
               </div>
               <div>
                 <label
-                  htmlFor="password"
+                  htmlFor={loginForm.password.id}
                   className="block text-sm font-medium text-gray-700">
                   Password
                 </label>
                 <div className="mt-1">
                   <input
-                    id="password"
+                    id={loginForm.password.id}
                     type="password"
                     autoComplete="current-password"
-                    {...register('password', { validate: loginValidation.password })}
-                    className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 shadow-sm placeholder:text-gray-400 focus:border-blue-500
-                            focus:outline-none focus:ring-blue-500 sm:text-sm"
+                    {...register(loginForm.password.id, loginForm.password.validate)}
+                    className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 shadow-sm placeholder:text-gray-400 focus:border-blue-300
+                            focus:outline-none focus:ring-blue-300 sm:text-sm"
                   />
-                  <p className="pt-1 text-sm text-red-500">{errors?.password?.message as string}</p>
+                  <p className="pt-1 text-xs text-red-500">{errors?.password?.message as string}</p>
                 </div>
               </div>
               <div className="flex items-center justify-between">

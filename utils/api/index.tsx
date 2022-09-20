@@ -1,5 +1,5 @@
-import { LoginDataType } from '../../types';
-import httpRequest, { NextRequestType } from '../../services/HttpClient';
+import { LoginDataType, SchoolType } from '@/types/index';
+import httpRequest, { NextRequestType } from '@/services/HttpClient';
 
 export const csrfToken = async () => {
   try {
@@ -22,4 +22,5 @@ export const auth = {
 
 export const schools = {
   all: () => httpRequest.get('/api/schools'),
+  create: (data: SchoolType) => withCsrf(() => httpRequest.post('/api/schools/create', { data })),
 };

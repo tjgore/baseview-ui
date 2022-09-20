@@ -21,3 +21,26 @@ const errorResponseSchema = z.object({
 export type ErrorResponseType = z.infer<typeof errorResponseSchema>;
 
 export const isErrorResponse = (error: unknown): error is ErrorResponseType => errorResponseSchema.safeParse(error).success;
+
+const schoolDataSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  address: z.string(),
+  email: z.string().email(),
+  phone: z.string(),
+  website: z.string().nullable().or(z.string().url()),
+  principal: z.string(),
+  vice_principal: z.string().nullable(),
+  slogan: z.string().nullable(),
+  about: z.string().nullable(),
+  created_at: z.string(),
+  updated_at: z.string(),
+});
+
+export const schoolListSchema = schoolDataSchema.array();
+
+export type SchoolListType = z.infer<typeof schoolListSchema>;
+
+export const schoolSchema = schoolDataSchema.omit({ id: true, created_at: true, updated_at: true });
+
+export type SchoolType = z.infer<typeof schoolSchema>;

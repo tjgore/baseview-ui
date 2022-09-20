@@ -39,8 +39,3 @@ export const charLimit = (text: string, limit: number) => {
   const updatedText = text.substring(textStart, limit).trimEnd();
   return updatedText.length <= limit ? updatedText : `${updatedText}...`;
 };
-
-// Get a possibly null or undefined variable
-/* export const value = <T, U>(value: T, defaultValue?: U): T | U | '' => {
-  return value ?? defaultValue ?? '';
-}; */
