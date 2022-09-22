@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import useAuth from '@/hooks/useAuth';
 import { addValidation } from '@/services/Validation';
 import { LoginDataType, isErrorResponse } from '@/types/index';
-import { canHandleError, resetForm, isInvalidResponse } from '@/utils/helpers';
+import { canHandleError, isInvalidResponse } from '@/utils/helpers';
 import Spinner from '@/components/Spinner';
 import { getLayout } from '@/components/Layouts/FullPageLayout';
 import { auth } from '@/utils/api';
@@ -29,16 +29,16 @@ const Login: NextPageWithLayout = () => {
 
   const {
     register,
-    resetField,
+    reset,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<LoginDataType>();
 
-  const onSubmit: SubmitHandler<FieldValues> = async data => {
+  const onSubmit: SubmitHandler<LoginDataType> = async data => {
     setHeadingError(false);
     setLoginLoading(true);
     try {
-      await auth.login(data as LoginDataType);
+      await auth.login(data);
       refetchUser();
     } catch (err) {
       if (isErrorResponse(err) && isInvalidResponse(err)) {
@@ -46,7 +46,7 @@ const Login: NextPageWithLayout = () => {
       }
       setLoginLoading(false);
     }
-    resetForm(resetField, ['email', 'password']);
+    reset();
   };
 
   if (user || isLoading) {

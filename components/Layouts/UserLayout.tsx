@@ -18,6 +18,7 @@ const navigation = [
   { name: 'Classes', href: '/classes', current: false },
   { name: 'Teachers', href: '#', current: false },
   { name: 'Students', href: '#', current: false },
+  { name: 'Settings', href: '#', current: false },
 ];
 const userNavigation = [
   { name: 'Account', href: '#' },

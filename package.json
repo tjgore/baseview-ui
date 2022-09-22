@@ -26,6 +26,7 @@
     "react-dom": "18.2.0",
     "react-focus-lock": "^2.9.1",
     "react-hook-form": "^7.35.0",
+    "react-phone-number-input": "^3.2.11",
     "react-toastify": "^9.0.8",
     "validatorjs": "^3.22.1",
     "zod": "^3.19.1"

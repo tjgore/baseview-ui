@@ -34,6 +34,7 @@ module.exports = {
     '@typescript-eslint/no-duplicate-enum-values': 'warn',
     '@typescript-eslint/no-misused-promises': ['warn', { checksVoidReturn: false }],
     '@typescript-eslint/restrict-template-expressions': 'off',
+    '@typescript-eslint/ban-ts-comment': ['warn', { 'ts-expect-error': 'allow-with-description', 'ts-ignore': 'allow-with-description' }],
     'react/function-component-definition': [
       'error',
       {

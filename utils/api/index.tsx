@@ -22,5 +22,8 @@ export const auth = {
 
 export const schools = {
   all: () => httpRequest.get('/api/schools'),
+  findById: id => httpRequest.get(`/api/schools/${id}`),
   create: (data: SchoolType) => withCsrf(() => httpRequest.post('/api/schools/create', { data })),
+  edit: (id, data: SchoolType) => withCsrf(() => httpRequest.put(`/api/schools/${id}/edit`, { data })),
+  delete: id => withCsrf(() => httpRequest.delete(`/api/schools/${id}/delete`)),
 };

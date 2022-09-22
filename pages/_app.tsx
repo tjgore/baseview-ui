@@ -48,7 +48,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     if (!isEmpty(cacheName)) {
       queryClient.invalidateQueries(['user']);
       setCacheName([]);
-      console.log('clear the user cache');
+      // console.log('clear the user cache');
     }
   }, [cacheName, queryClient]);
 

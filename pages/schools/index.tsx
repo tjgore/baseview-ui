@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { HomeModernIcon } from '@heroicons/react/24/outline';
+import { EnvelopeOpenIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/solid';
 import { getLayout } from '@/components/Layouts/UserLayout';
 import { schools as schoolsApi } from '@/utils/api/index';
 import useAuth from '@/hooks/useAuth';
-import LoadingText from '@/components/Loading/Text';
-import ErrorText from '@/components/Error/Text';
+import Spinner from '@/components/Spinner';
 import type { NextPageWithLayout } from '@/pages/_app';
 import { SchoolListType, schoolListSchema } from '@/types/index';
+import Alert from '@/components/Alert';
 
 const isSchoolData = (data: unknown): data is SchoolListType => schoolListSchema.safeParse(data).success;
 
@@ -26,7 +27,6 @@ const Overview: NextPageWithLayout = () => {
   }, [data]);
 
   const schools = isSchoolData(data) ? data : null;
-  const showStateCard = isLoading || isFetching || !!error || dataError;
 
   return (
     <>
@@ -41,7 +41,7 @@ const Overview: NextPageWithLayout = () => {
               <Link href="/schools/create">
                 <a
                   className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm
-                  font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2">
+                  font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:ring-offset-2">
                   Create School
                 </a>
               </Link>
@@ -50,69 +50,86 @@ const Overview: NextPageWithLayout = () => {
         </div>
       </header>
       <main>
+        <div className="fixed bottom-0 left-0 w-full px-6 pb-8">
+          {(isLoading || isFetching) && (
+            <Alert
+              className="ml-auto w-full px-5 md:w-1/5"
+              message={isFetching && !isLoading ? 'Refreshing...' : 'Loading...'}
+              icon={
+                <Spinner
+                  color="text-blue-500"
+                  size="h-4 w-4"
+                  aria-hidden="true"
+                />
+              }
+            />
+          )}
+          {(error || dataError) && (
+            <Alert
+              className="ml-auto w-full px-5 md:w-1/2"
+              message="An error occurred. Try reloading the page."
+              iconType="error"
+              color="red"
+              action={{ text: 'Reload', onClick: () => window.location.reload() }}
+            />
+          )}
+        </div>
         <div className="mx-auto max-w-7xl pb-5 sm:px-6 lg:px-8">
-          <div className="p-3 sm:px-0">
-            <div className="min-h-[2.5rem]">
-              {showStateCard && (
-                <div className={`flex items-center rounded-lg border ${error || dataError ? 'border-red-100 bg-red-50' : 'border-blue-100 bg-blue-50'} px-3 py-1 shadow-sm`}>
-                  <>
-                    {isLoading && <LoadingText />}
-                    {isFetching && !isLoading && <LoadingText text="Refreshing" />}
-                    {(error || dataError) && <ErrorText reload />}
-                  </>
-                </div>
-              )}
-            </div>
-
+          <div className="px-4 py-3 pt-10 sm:px-0">
             {schools ? (
               schools.map(school => (
                 <div
                   key={school.id}
-                  className="mb-5 rounded-lg border bg-white p-5 shadow-sm md:p-8">
-                  <div className="flex flex-row">
-                    <HomeModernIcon
-                      name="school"
-                      className="mr-4 hidden h-8 w-8 text-gray-600 md:block"
-                    />
+                  className="mb-5 rounded-lg border bg-white px-5 pt-5 pb-4 shadow-sm md:px-5 md:pt-8">
+                  <div className="flex flex-col sm:flex-row">
+                    <div className="mr-3 mb-2 flex h-14 w-14 items-center justify-center rounded-sm border-2 bg-gray-200 sm:mb-0">
+                      <HomeModernIcon
+                        name="school"
+                        className="m-auto h-8 w-8 text-gray-600"
+                      />
+                    </div>
                     <div className="flex w-full flex-col md:flex-row">
-                      <div className="w-full">
+                      <div className="w-full pt-1">
                         <Link href={`/schools/${school.id}/overview`}>
-                          <a className="text-lg font-semibold leading-6 text-gray-900 hover:underline">{school.name}</a>
+                          <a className="block text-lg font-semibold leading-6 text-gray-900 hover:underline">{school.name}</a>
                         </Link>
-                        <p className="mb-6 w-full pt-1 text-sm text-gray-500 md:w-2/3">{school.about}</p>
+                        <div className="flex w-full flex-wrap py-1">
+                          <div className="mb-1 flex items-center pr-4 text-gray-500">
+                            <EnvelopeOpenIcon className="mr-2 h-4 w-4 text-gray-400" />
+                            {school.email}
+                          </div>
+                          <div className="mb-1 flex items-center pr-4 text-gray-500">
+                            <PhoneIcon className="mr-2 h-4 w-4 text-gray-400" />
+                            {school.phone}
+                          </div>
+                          <div className="mb-1 flex items-center text-gray-500">
+                            <MapPinIcon className="mr-2 h-4 w-4 text-gray-400" />
+                            {school.address}
+                          </div>
+                        </div>
 
-                        <div className="mb-2 flex flex-col leading-6 lg:mb-2 lg:flex-row">
-                          <p className="w-1/2 font-medium text-gray-700 lg:w-1/5">Email</p>
-                          <p className="text-gray-500">{school.email}</p>
-                        </div>
-                        <div className="mb-2 flex flex-col leading-6 lg:mb-2 lg:flex-row">
-                          <p className="w-1/2 font-medium text-gray-700 lg:w-1/5">Phone</p>
-                          <p className="text-gray-500">{school.phone}</p>
-                        </div>
-                        <div className="mb-2 flex flex-col leading-6 lg:mb-2 lg:flex-row">
-                          <p className="w-1/2 font-medium text-gray-700 lg:w-1/5">Address</p>
-                          <p className="text-gray-500">{school.address}</p>
-                        </div>
-                      </div>
-                      <div className="flex flex-row items-start justify-center">
-                        <Link href="/schools">
-                          <button
-                            type="button"
-                            className="ml-2 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-1 text-sm font-semibold
-                    text-gray-700 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                            Edit
-                          </button>
-                        </Link>
-                        <Link href="/schools">
-                          <button
-                            type="button"
-                            className="ml-2 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-1 text-sm font-semibold
-                          text-gray-700 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                            Details
-                          </button>
-                        </Link>
+                        <p className="mb-6 w-full pt-1 text-sm md:w-2/3">{school.about ?? school.slogan ?? <span className="text-xs">No introduction was provided</span>}</p>
+                        {/* <div className="grid grid-cols-6">
+                          <div>
+                            <p className="text-xs font-semibold text-gray-500">Total Students</p>
+                            <p className="text-3xl font-semibold text-gray-800">53</p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold text-gray-500">Total Teachers</p>
+                            <p className="text-3xl font-semibold text-gray-800">12</p>
+                          </div>
+                        </div> */}
                       </div>
                     </div>
+                  </div>
+                  <div className="flex flex-row items-center justify-end">
+                    <Link href={`/schools/${school.id}/edit`}>
+                      <a
+                        className="ml-1 inline-flex items-center rounded-sm bg-gray-200 px-4 py-1 text-xs font-semibold
+                            text-gray-700 shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        Edit
+                      </a>
+                    </Link>
                   </div>
                 </div>
               ))

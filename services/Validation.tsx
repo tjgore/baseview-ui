@@ -4,13 +4,13 @@ type ObjectType = {
   [name: string]: string;
 };
 
-type FormFields = {
-  [name: string]: { id?: string; rules: string; validate?: { validate: (value: string) => string | boolean } };
+type FormFields<U> = { [name: string]: { id?: U; rules: string } };
+
+type FieldValidation<U> = {
+  [name: string]: { id: U; rules: string; validate?: { validate: (value: string | null) => string | boolean } };
 };
 
-type FieldValidation = {
-  [name: string]: { id: string; rules: string; validate?: { validate: (value: string) => string | boolean } };
-};
+type AddValidationType = <K extends keyof T, T extends FormFields<K>>(formFields: T) => FieldValidation<K>;
 
 /**
  * Validates a single form field @TODO debounce this
@@ -32,12 +32,12 @@ export const validateField = (fieldData: { [name: string]: unknown }, rules: Obj
  * @param name
  * @returns
  */
-const addFieldValidation = (field: { id?: string; rules: string }, name: string) => {
+const addFieldValidation = <K extends keyof T, T extends { id?: K; rules: string }>(field: T, name: string) => {
   const rules = { [name]: field.rules };
   return {
     id: field.id ?? name,
     rules: field.rules,
-    validate: { validate: (value: string) => validateField({ [name]: value }, rules) },
+    validate: { validate: (value: string | null) => validateField({ [name]: value }, rules) },
   };
 };
 
@@ -45,9 +45,10 @@ const addFieldValidation = (field: { id?: string; rules: string }, name: string)
  * Add validation to all form fields
  * @param formFields
  */
-export const addValidation = (formFields: FormFields) => {
+export const addValidation: AddValidationType = formFields => {
   const fields = Object.keys(formFields);
-  const formWithValidation = { ...formFields } as FieldValidation;
+
+  const formWithValidation = {};
 
   fields.forEach(name => {
     const field = formFields[name];
