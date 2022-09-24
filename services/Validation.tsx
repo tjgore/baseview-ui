@@ -4,11 +4,15 @@ type ObjectType = {
   [name: string]: string;
 };
 
+type ValueType = string | { label: string; value: string } | number | null;
+
 type FormFields<U> = { [name: string]: { id?: U; rules: string } };
 
 type FieldValidation<U> = {
-  [name: string]: { id: U; rules: string; validate?: { validate: (value: string | null) => string | boolean } };
+  [name: string]: { id: U; rules: string; validate?: { validate: (value: ValueType) => string | boolean } };
 };
+
+type FieldDataType = { [name: string]: { label: string; value: string } | string | number | null };
 
 type AddValidationType = <K extends keyof T, T extends FormFields<K>>(formFields: T) => FieldValidation<K>;
 
@@ -19,8 +23,13 @@ type AddValidationType = <K extends keyof T, T extends FormFields<K>>(formFields
  * @param messages
  * @returns string | boolean
  */
-export const validateField = (fieldData: { [name: string]: unknown }, rules: ObjectType, messages?: ObjectType) => {
+export const validateField = (fieldData: FieldDataType, rules: ObjectType, messages?: ObjectType) => {
   const fieldName = Object.keys(fieldData)[0];
+  const data = fieldData[fieldName];
+
+  if (data && typeof data === 'object' && 'value' in data) {
+    fieldData[fieldName] = data.value;
+  }
 
   const validation = new Validator(fieldData, rules, messages);
   return validation.passes() || validation.errors.first(fieldName);
@@ -37,7 +46,9 @@ const addFieldValidation = <K extends keyof T, T extends { id?: K; rules: string
   return {
     id: field.id ?? name,
     rules: field.rules,
-    validate: { validate: (value: string | null) => validateField({ [name]: value }, rules) },
+    validate: {
+      validate: (value: ValueType) => validateField({ [name]: value }, rules),
+    },
   };
 };
 

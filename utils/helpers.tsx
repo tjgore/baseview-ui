@@ -14,12 +14,12 @@ export const isUnauthenticatedError = (error: ErrorResponseType | null) => {
   return error?.response?.status === UNAUTHENTICATED;
 };
 
-export const isInvalidResponse = (error: ErrorResponseType | null) => {
+export const isValidationError = (error: ErrorResponseType | null) => {
   return error?.response?.status === UNPROCESSABLE_ENTITY;
 };
 
 export const canHandleError = (error: ErrorResponseType | null) => {
-  return isUnauthenticatedError(error) || isInvalidResponse(error);
+  return isUnauthenticatedError(error) || isValidationError(error);
 };
 
 export const charLimit = (text: string, limit: number) => {

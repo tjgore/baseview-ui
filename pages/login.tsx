@@ -3,7 +3,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import useAuth from '@/hooks/useAuth';
 import { addValidation } from '@/services/Validation';
 import { LoginDataType, isErrorResponse } from '@/types/index';
-import { canHandleError, isInvalidResponse } from '@/utils/helpers';
+import { canHandleError, isValidationError } from '@/utils/helpers';
 import Spinner from '@/components/Spinner';
 import { getLayout } from '@/components/Layouts/FullPageLayout';
 import { auth } from '@/utils/api';
@@ -41,13 +41,15 @@ const Login: NextPageWithLayout = () => {
       await auth.login(data);
       refetchUser();
     } catch (err) {
-      if (isErrorResponse(err) && isInvalidResponse(err)) {
+      if (isErrorResponse(err) && isValidationError(err)) {
         setHeadingError(true);
       }
       setLoginLoading(false);
     }
     reset();
   };
+
+  console.log('check data', user, isLoading, '');
 
   if (user || isLoading) {
     return <PageLoading dark />;

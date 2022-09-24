@@ -10,18 +10,17 @@ import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { NextPageWithLayout } from '@/pages/_app';
-import { isInvalidResponse, getDefaultValues, isUnauthenticatedError } from '@/utils/helpers';
+import { isValidationError, getDefaultValues, isUnauthenticatedError } from '@/utils/helpers';
 import { getLayout } from '@/components/Layouts/UserLayout';
 import { addValidation } from '@/services/Validation';
 import { schools } from '@/utils/api';
-import { isErrorResponse, schoolSchema, SchoolType } from '@/types/index';
+import { isErrorResponse, isSchoolData, SchoolType } from '@/types/index';
 import Spinner from '@/components/Spinner';
 import ErrorText from '@/components/Error/Text';
 import Required from '@/components/Form/Required';
 import Message from '@/components/Toast/Message';
 import Modal from '@/components/Modals';
-
-const isSchoolData = (data): data is SchoolType => schoolSchema.safeParse(data).success;
+import ScrollContent from '@/components/Modals/ScrollContent';
 
 const schoolFields = {
   name: { rules: 'string|required' },
@@ -44,7 +43,7 @@ const CreateSchool: NextPageWithLayout = () => {
   const [formLoading, setFormLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const { data, error: editError, refetch } = useQuery(['schools', schoolId], () => schools.findById(schoolId), { enabled: !!schoolId });
+  const { data, error: editError, refetch } = useQuery(['school', schoolId], () => schools.findById(schoolId), { enabled: !!schoolId });
   const school = useMemo(() => (isSchoolData(data) ? getDefaultValues(data) : {}), [data]);
   const pageTitle = schoolId ? 'Edit' : 'Create';
 
@@ -83,7 +82,7 @@ const CreateSchool: NextPageWithLayout = () => {
         await createOrUpdate(data);
       }
     } catch (err) {
-      if (isErrorResponse(err) && isInvalidResponse(err)) {
+      if (isErrorResponse(err) && isValidationError(err)) {
         setError(true);
       }
       toast.error(
@@ -144,7 +143,7 @@ const CreateSchool: NextPageWithLayout = () => {
   return (
     <>
       <header className="bg-white shadow-sm">
-        <div className="mx-auto max-w-7xl p-5 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl p-5 py-4 sm:px-6 lg:px-8">
           <div>
             <div>
               <nav
@@ -152,7 +151,7 @@ const CreateSchool: NextPageWithLayout = () => {
                 aria-label="Breadcrumb">
                 <ol
                   role="list"
-                  className="flex flex-wrap items-center space-x-2 md:space-x-4 lg:flex-nowrap">
+                  className="flex flex-wrap items-center space-x-2 lg:flex-nowrap">
                   <li>
                     <div className="flex">
                       <Link href="/schools">
@@ -167,64 +166,82 @@ const CreateSchool: NextPageWithLayout = () => {
                         aria-hidden="true"
                       />
                       <Link href="#">
-                        <a className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">{pageTitle} School</a>
+                        <a className="ml-2 text-sm font-medium text-gray-500 hover:text-gray-700">{pageTitle} School</a>
                       </Link>
                     </div>
                   </li>
                 </ol>
               </nav>
             </div>
-            <div className="mt-2 md:flex md:items-center md:justify-between">
+            <div className="mt-1 md:flex md:items-center md:justify-between">
               <div className="min-w-0 flex-1">
-                <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-                  {pageTitle} {school.name ?? ''}
+                <h2 className="text-2xl font-semibold leading-7 text-gray-900 sm:truncate sm:tracking-tight">
+                  {pageTitle} {school.name ?? 'School'}
                 </h2>
               </div>
               <div className="mt-4 flex md:mt-0 md:ml-4">
-                <button
-                  type="button"
-                  onClick={() => setOpen(true)}
-                  className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm
-                  font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-red-500 focus:ring-offset-2">
-                  Delete School
-                </button>
-                <Modal
-                  open={open}
-                  setOpen={(state: boolean) => setOpen(state)}
-                  title="Delete School"
-                  body={`Are you sure you want to delete ${school.name}? All of your school data will be removed.`}
-                  icon={
-                    <ExclamationTriangleIcon
-                      className="h-6 w-6 text-red-600"
-                      aria-hidden="true"
-                    />
-                  }
-                  button={
+                {schoolId && (
+                  <>
                     <button
                       type="button"
-                      className="inline-flex w-full items-center justify-center rounded-md border border-transparent
+                      onClick={() => setOpen(true)}
+                      className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm
+                  font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-red-500 focus:ring-offset-2">
+                      Delete School
+                    </button>
+                    <Modal
+                      open={open}
+                      setOpen={(state: boolean) => setOpen(state)}
+                      title="Delete School"
+                      body={`Are you sure you want to delete ${school.name}? All of your school data will be removed.`}
+                      icon={
+                        <ExclamationTriangleIcon
+                          className="h-6 w-6 text-red-600"
+                          aria-hidden="true"
+                        />
+                      }
+                      button={
+                        <button
+                          type="button"
+                          className="inline-flex w-full items-center justify-center rounded-md border border-transparent
                     bg-red-600 px-4 py-1 text-sm font-semibold text-white shadow-sm hover:bg-red-700 
                     focus:outline-none focus:ring-1 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                      onClick={deleteSchool}>
-                      {deleteLoading ? (
-                        <div className="flex items-center">
-                          <Spinner className="mr-3" /> Loading...
-                        </div>
-                      ) : (
-                        'Yes, Delete'
-                      )}
-                    </button>
-                  }
-                />
+                          onClick={deleteSchool}>
+                          {deleteLoading ? (
+                            <div className="flex items-center">
+                              <Spinner className="mr-3" /> Loading...
+                            </div>
+                          ) : (
+                            'Yes, Delete'
+                          )}
+                        </button>
+                      }>
+                      <ScrollContent
+                        title="Add New School"
+                        setOpen={(state: boolean) => setOpen(state)}
+                        body={`Are you sure you want to delete ${school.name}? All of your school data will be removed.`}
+                        button={
+                          <button
+                            type="button"
+                            className="inline-flex w-full items-center justify-center rounded-md border border-transparent
+                                    bg-red-600 px-4 py-1 text-sm font-semibold text-white shadow-sm hover:bg-red-700
+                                    focus:outline-none focus:ring-1 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm">
+                            Save
+                          </button>
+                        }
+                      />
+                    </Modal>
+                  </>
+                )}
               </div>
             </div>
           </div>
         </div>
       </header>
       <main>
-        <div className="mx-auto max-w-3xl pb-5 sm:px-6 lg:px-8">
-          <div className="px-4 py-3 pt-10">
-            <div className="mb-5 rounded-lg border bg-white px-6 pt-5 shadow-sm sm:px-10 sm:pb-10 ">
+        <div className="mx-auto max-w-7xl pb-5 sm:px-6 lg:px-8">
+          <div className="max-w-7xl px-0 py-3 pt-10">
+            <div className="mb-5 rounded-lg border bg-white px-6 pt-5 shadow-sm sm:px-12 sm:pb-10 ">
               <form
                 noValidate
                 onSubmit={handleSubmit(onSubmit)}>
@@ -236,11 +253,11 @@ const CreateSchool: NextPageWithLayout = () => {
                       <div className="flex pt-2 text-red-500">{showError && <ErrorText text="An error occurred. Try again." />}</div>
                     </div>
 
-                    <div className="grid grid-cols-6 gap-6">
-                      <div className="col-span-6">
+                    <div className="grid grid-cols-6 gap-x-10 gap-y-5">
+                      <div className="col-span-3">
                         <label
                           htmlFor={schoolForm.name.id}
-                          className="block text-sm font-medium text-gray-700">
+                          className="block font-semibold text-gray-800">
                           School name <Required rules={schoolForm.name.rules} />
                         </label>
                         <input
@@ -253,10 +270,10 @@ const CreateSchool: NextPageWithLayout = () => {
                         />
                         <p className="pt-1 text-xs text-red-500">{errors?.name?.message as string}</p>
                       </div>
-                      <div className="col-span-6">
+                      <div className="col-span-3">
                         <label
                           htmlFor={schoolForm.address.id}
-                          className="block text-sm font-medium text-gray-700">
+                          className="block font-semibold text-gray-800">
                           Street address <Required rules={schoolForm.address.rules} />
                         </label>
                         <input
@@ -270,10 +287,10 @@ const CreateSchool: NextPageWithLayout = () => {
                         <p className="pt-1 text-xs text-red-500">{errors?.address?.message as string}</p>
                       </div>
 
-                      <div className="col-span-6">
+                      <div className="col-span-3">
                         <label
                           htmlFor={schoolForm.email.id}
-                          className="block text-sm font-medium text-gray-700">
+                          className="block font-semibold text-gray-800">
                           Email address <Required rules={schoolForm.email.rules} />
                         </label>
                         <input
@@ -287,14 +304,15 @@ const CreateSchool: NextPageWithLayout = () => {
                         <p className="pt-1 text-xs text-red-500">{errors?.email?.message as string}</p>
                       </div>
 
-                      <div className="col-span-6">
+                      <div className="col-span-3">
                         <label
-                          htmlFor={schoolForm.name.id}
-                          className="block text-sm font-medium text-gray-700">
+                          htmlFor={schoolForm.phone.id}
+                          className="block font-semibold text-gray-800">
                           Phone <Required rules={schoolForm.phone.rules} />
                         </label>
                         <PhoneInputWithCountry
                           name={schoolForm.phone.id}
+                          id={schoolForm.phone.id}
                           /** @ts-ignore: Library types issue  */
                           control={control}
                           rules={schoolForm.phone.validate}
@@ -304,10 +322,10 @@ const CreateSchool: NextPageWithLayout = () => {
                         <p className="pt-1 text-xs text-red-500">{errors?.phone?.message as string}</p>
                       </div>
 
-                      <div className="col-span-6">
+                      <div className="col-span-3">
                         <label
                           htmlFor={schoolForm.website.id}
-                          className="block text-sm font-medium text-gray-700">
+                          className="block font-semibold text-gray-800">
                           Website <Required rules={schoolForm.website.rules} />
                         </label>
                         <input
@@ -321,10 +339,10 @@ const CreateSchool: NextPageWithLayout = () => {
                         <p className="pt-1 text-xs text-red-500">{errors?.website?.message as string}</p>
                       </div>
 
-                      <div className="col-span-6">
+                      <div className="col-span-3">
                         <label
                           htmlFor={schoolForm.principal.id}
-                          className="block text-sm font-medium text-gray-700">
+                          className="block font-semibold text-gray-800">
                           Principal <Required rules={schoolForm.principal.rules} />
                         </label>
                         <input
@@ -338,10 +356,10 @@ const CreateSchool: NextPageWithLayout = () => {
                         <p className="pt-1 text-xs text-red-500">{errors?.principal?.message as string}</p>
                       </div>
 
-                      <div className="col-span-6">
+                      <div className="col-span-3">
                         <label
                           htmlFor={schoolForm.vice_principal.id}
-                          className="block text-sm font-medium text-gray-700">
+                          className="block font-semibold text-gray-800">
                           Vice Principal <Required rules={schoolForm.vice_principal.rules} />
                         </label>
                         <input
@@ -358,7 +376,7 @@ const CreateSchool: NextPageWithLayout = () => {
                       <div className="col-span-6">
                         <label
                           htmlFor="about"
-                          className="block text-sm font-medium text-gray-700">
+                          className="block font-semibold text-gray-800">
                           About <Required rules={schoolForm.about.rules} />
                         </label>
                         <textarea

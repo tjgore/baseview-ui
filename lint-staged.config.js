@@ -10,5 +10,5 @@ module.exports = {
   '*.{ts,tsx}': [buildEslintCommand],
 
   // Format TypeScript and JavaScript files
-  '**/*.(ts|tsx|js|md|json)': ['prettier --check --config ./prettier.config.js .'],
+  '**/*.(ts|tsx|js|md|json)': ['prettier --write --config ./prettier.config.js .'],
 };

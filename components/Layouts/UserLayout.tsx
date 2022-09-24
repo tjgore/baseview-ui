@@ -3,8 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 import { getLayout as getAppLayout } from './AppLayout';
 import { classNames, charLimit, canHandleError } from '../../utils/helpers';
 import useAuth from '../../hooks/useAuth';
@@ -59,19 +58,6 @@ const UserLayout = ({ children }) => {
 
   return (
     <div className="min-h-full">
-      <ToastContainer
-        bodyClassName="!mb-3 !flex !items-start font-sans"
-        position="top-right"
-        icon={true}
-        autoClose={4000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
       <Disclosure
         as="nav"
         className="bg-gray-800">

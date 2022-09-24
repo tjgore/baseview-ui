@@ -12,25 +12,30 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
 [API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in
 `pages/api/hello.ts`.
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
-## Learn More
+## Styling Notes
 
-To learn more about Next.js, take a look at the following resources:
+Page header - `text-2xl font-semibold leading-7 text-gray-900 sm:truncate sm:tracking-tight`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Section, Card or main Title - `text-xl font-medium leading-6 text-gray-900`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Descriptions under page header - `mt-1 text-sm text-gray-500 md:block`
 
-## Deploy on Vercel
+Descriptions under Titles - `mt-1 text-xs text-gray-500 md:block`
 
-The easiest way to deploy your Next.js app is to use the
-[Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Regular text -
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Buttons **TODO keep padding and margin separate from button use a wrapping div instead.**
+
+- Blue Primary -
+  `inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:ring-offset-2`
+- Gray Secondary -
+  `ml-3 inline-flex items-center rounded-md bg-slate-200 px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-slate-300 hover:text-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2`
+
+Input label
+
+Any Input

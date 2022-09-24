@@ -44,3 +44,5 @@ export type SchoolListType = z.infer<typeof schoolListSchema>;
 export const schoolSchema = schoolDataSchema.omit({ id: true, created_at: true, updated_at: true });
 
 export type SchoolType = z.infer<typeof schoolSchema>;
+
+export const isSchoolData = (data): data is SchoolType => schoolSchema.safeParse(data).success;
