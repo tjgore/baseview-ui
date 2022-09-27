@@ -9,6 +9,8 @@ import useAuth from '@/hooks/useAuth';
 import { getLayout } from '@/components/Layouts/UserLayout';
 import Modal from '@/components/Modals';
 import ScrollContent from '@/components/Modals/ScrollContent';
+import Alert from '@/components/Alert';
+import Spinner from '@/components/Spinner';
 
 const Overview: NextPageWithLayout = () => {
   useAuth({ middleware: 'auth' });
@@ -79,9 +81,9 @@ const Overview: NextPageWithLayout = () => {
       </header>
       <main>
         <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-          {/* Replace with your content */}
           <div className="p-4 sm:px-0">
-            <div className="h-96 rounded-lg  border bg-white p-5">
+            <div className="rounded-lg border bg-white p-5">
+              {/* Replace with your content */}
               <button
                 type="button"
                 onClick={() => setOpen(true)}
@@ -161,9 +163,29 @@ const Overview: NextPageWithLayout = () => {
                   </div>
                 </div>
               </div>
+              <div>
+                <Alert
+                  className="ml-auto w-full px-5 md:w-1/5"
+                  message="Refreshing..."
+                  icon={
+                    <Spinner
+                      color="text-blue-500"
+                      size="h-4 w-4"
+                      aria-hidden="true"
+                    />
+                  }
+                />
+                <Alert
+                  className=" my-5 ml-auto w-full px-5 md:w-1/2"
+                  message="An error occurred. Try reloading the page."
+                  iconType="error"
+                  color="red"
+                  action={{ text: 'Reload', onClick: () => window.location.reload() }}
+                />
+              </div>
+              {/* /End replace */}
             </div>
           </div>
-          {/* /End replace */}
         </div>
       </main>
     </>

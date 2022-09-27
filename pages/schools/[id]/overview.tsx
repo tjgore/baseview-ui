@@ -16,7 +16,7 @@ const Overview: NextPageWithLayout = () => {
   useAuth({ middleware: 'auth' });
   const router = useRouter();
   const { id: schoolId } = router.query;
-  const [openDrawer, setOpenDrawer] = useState(true);
+  const [openDrawer, setOpenDrawer] = useState(false);
   const { data } = useQuery(['school', schoolId], () => schools.findById(schoolId), { enabled: !!schoolId });
   const school = useMemo(() => {
     return isSchoolData(data) ? getDefaultValues(data) : {};

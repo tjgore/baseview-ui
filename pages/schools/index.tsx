@@ -1,32 +1,19 @@
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { HomeModernIcon } from '@heroicons/react/24/outline';
 import { EnvelopeOpenIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/solid';
 import { getLayout } from '@/components/Layouts/UserLayout';
+import QueryStatus from '@/components/QueryStatus';
 import { schools as schoolsApi } from '@/utils/api/index';
 import useAuth from '@/hooks/useAuth';
-import Spinner from '@/components/Spinner';
 import type { NextPageWithLayout } from '@/pages/_app';
-import { SchoolListType, schoolListSchema } from '@/types/index';
-import Alert from '@/components/Alert';
-
-const isSchoolData = (data: unknown): data is SchoolListType => schoolListSchema.safeParse(data).success;
+import { isSchoolListData } from '@/types/index';
 
 const Overview: NextPageWithLayout = () => {
-  const [dataError, setDataError] = useState(false);
   useAuth({ middleware: 'auth' });
   const { data, error, isLoading, isFetching } = useQuery(['schools'], schoolsApi.all);
 
-  useEffect(() => {
-    if (data && !isSchoolData(data)) {
-      setDataError(true);
-    } else {
-      setDataError(false);
-    }
-  }, [data]);
-
-  const schools = isSchoolData(data) ? data : null;
+  const schools = isSchoolListData(data) ? data : null;
 
   return (
     <>
@@ -50,32 +37,15 @@ const Overview: NextPageWithLayout = () => {
         </div>
       </header>
       <main>
-        <div className="fixed bottom-0 left-0 w-full px-6 pb-8">
-          {(isLoading || isFetching) && (
-            <Alert
-              className="ml-auto w-full px-5 md:w-1/5"
-              message={isFetching && !isLoading ? 'Refreshing...' : 'Loading...'}
-              icon={
-                <Spinner
-                  color="text-blue-500"
-                  size="h-4 w-4"
-                  aria-hidden="true"
-                />
-              }
-            />
-          )}
-          {(error || dataError) && (
-            <Alert
-              className="ml-auto w-full px-5 md:w-1/2"
-              message="An error occurred. Try reloading the page."
-              iconType="error"
-              color="red"
-              action={{ text: 'Reload', onClick: () => window.location.reload() }}
-            />
-          )}
-        </div>
         <div className="mx-auto max-w-7xl pb-5 sm:px-6 lg:px-8">
-          <div className="px-4 py-3 pt-10 sm:px-0">
+          <div className="px-4 pb-3 sm:px-0 ">
+            <div className="flex h-10 items-center">
+              <QueryStatus
+                isLoading={isLoading}
+                isFetching={isFetching}
+                error={error}
+              />
+            </div>
             {schools ? (
               schools.map(school => (
                 <div

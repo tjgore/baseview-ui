@@ -156,9 +156,11 @@ const UserLayout = ({ children }) => {
                           {userNavigation.map(item => (
                             <Menu.Item key={item.name}>
                               {({ active }) => (
-                                <Link href={item.href}>
-                                  <a className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200')}>{item.name}</a>
-                                </Link>
+                                <button
+                                  type="button"
+                                  className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200')}>
+                                  {item.name}
+                                </button>
                               )}
                             </Menu.Item>
                           ))}

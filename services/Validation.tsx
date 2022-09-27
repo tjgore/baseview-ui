@@ -4,7 +4,7 @@ type ObjectType = {
   [name: string]: string;
 };
 
-type ValueType = string | { label: string; value: string } | number | null;
+export type ValueType = string | { label: string; value: string } | { label: string; value: number } | number | null;
 
 type FormFields<U> = { [name: string]: { id?: U; rules: string } };
 
@@ -12,7 +12,7 @@ type FieldValidation<U> = {
   [name: string]: { id: U; rules: string; validate?: { validate: (value: ValueType) => string | boolean } };
 };
 
-type FieldDataType = { [name: string]: { label: string; value: string } | string | number | null };
+type FieldDataType = { [name: string]: ValueType };
 
 type AddValidationType = <K extends keyof T, T extends FormFields<K>>(formFields: T) => FieldValidation<K>;
 

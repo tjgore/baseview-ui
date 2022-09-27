@@ -1,4 +1,4 @@
-import { LoginDataType, SchoolType } from '@/types/index';
+import type { LoginDataType, SchoolType, InviteType } from '@/types/index';
 import httpRequest, { NextRequestType } from '@/services/HttpClient';
 
 export const csrfToken = async () => {
@@ -21,9 +21,18 @@ export const auth = {
 };
 
 export const schools = {
+  // Rename all to myschools?
   all: () => httpRequest.get('/api/schools'),
   findById: id => httpRequest.get(`/api/schools/${id}`),
   create: (data: SchoolType) => withCsrf(() => httpRequest.post('/api/schools/create', { data })),
   edit: (id, data: SchoolType) => withCsrf(() => httpRequest.put(`/api/schools/${id}/edit`, { data })),
   delete: id => withCsrf(() => httpRequest.delete(`/api/schools/${id}/delete`)),
+};
+
+export const roles = {
+  school: () => httpRequest.get('/api/roles'),
+};
+
+export const invites = {
+  create: (data: InviteType) => withCsrf(() => httpRequest.post('/api/invites', { data })),
 };
