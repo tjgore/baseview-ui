@@ -1,5 +1,7 @@
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import Spinner from '@/components/Spinner';
+import { isErrorResponse } from '@/types/index';
+import { isUnauthenticatedError } from '@/utils/helpers';
 
 type QueryStatusProps = {
   isLoading?: boolean;
@@ -8,6 +10,7 @@ type QueryStatusProps = {
 };
 
 const QueryStatus = ({ isLoading, isFetching, error }: QueryStatusProps) => {
+  const hasError = error && isErrorResponse(error) && !isUnauthenticatedError(error);
   return (
     <>
       {(isLoading || isFetching) && (
@@ -21,7 +24,7 @@ const QueryStatus = ({ isLoading, isFetching, error }: QueryStatusProps) => {
           <p className="text-blue-900">{isFetching && !isLoading ? 'Refreshing...' : 'Loading...'}</p>
         </>
       )}
-      {error && !isLoading && !isFetching && (
+      {hasError && !isLoading && !isFetching && (
         <>
           <ExclamationTriangleIcon
             className="mr-2 h-5 w-5 text-red-600"
@@ -31,6 +34,7 @@ const QueryStatus = ({ isLoading, isFetching, error }: QueryStatusProps) => {
             An error occurred. Try reloading the page.
             <button
               type="button"
+              onClick={() => window.location.reload()}
               className="ml-1 underline hover:font-semibold">
               Reload
             </button>

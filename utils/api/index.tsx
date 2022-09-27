@@ -1,4 +1,6 @@
-import type { LoginDataType, SchoolType, InviteType } from '@/types/index';
+import type { LoginDataType } from '@/types/index';
+import type { SchoolType } from '@/types/schools';
+import type { InviteType } from '@/types/invites';
 import httpRequest, { NextRequestType } from '@/services/HttpClient';
 
 export const csrfToken = async () => {

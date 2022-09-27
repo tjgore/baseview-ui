@@ -10,29 +10,20 @@ import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { NextPageWithLayout } from '@/pages/_app';
-import { isValidationError, getDefaultValues, isUnauthenticatedError } from '@/utils/helpers';
+import { isValidationError, getDefaultValues } from '@/utils/helpers';
 import { getLayout } from '@/components/Layouts/UserLayout';
 import { addValidation } from '@/services/Validation';
 import { schools } from '@/utils/api';
-import { isErrorResponse, isSchoolData, SchoolType } from '@/types/index';
+import { isErrorResponse } from '@/types/index';
+import { isSchoolData, SchoolType } from '@/types/schools';
 import Spinner from '@/components/Spinner';
 import ErrorText from '@/components/Error/Text';
 import Required from '@/components/Form/Required';
 import Message from '@/components/Toast/Message';
 import Modal from '@/components/Modals';
-import ScrollContent from '@/components/Modals/ScrollContent';
-
-const schoolFields = {
-  name: { rules: 'string|required' },
-  address: { rules: 'string|required' },
-  email: { rules: 'required|email' },
-  phone: { rules: 'string|required' },
-  website: { rules: 'string|url|present' },
-  about: { rules: 'string|present' },
-  slogan: { rules: 'string|present' },
-  principal: { rules: 'required|string' },
-  vice_principal: { rules: 'string|present' },
-};
+import { schoolFields } from '@/utils/constants/forms';
+import LoadingContent from '@/components/Button/LoadingContent';
+import QueryStatus from '@/components/QueryStatus';
 
 const schoolForm = addValidation(schoolFields);
 
@@ -43,7 +34,13 @@ const CreateSchool: NextPageWithLayout = () => {
   const [formLoading, setFormLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const { data, error: editError, refetch } = useQuery(['school', schoolId], () => schools.findById(schoolId), { enabled: !!schoolId });
+  const {
+    data,
+    error: editError,
+    isLoading: schoolLoading,
+    isFetching: schoolFecthing,
+    refetch,
+  } = useQuery(['school', schoolId], () => schools.findById(schoolId), { enabled: !!schoolId });
   const school = useMemo(() => (isSchoolData(data) ? getDefaultValues(data) : {}), [data]);
   const pageTitle = schoolId ? 'Edit' : 'Create';
 
@@ -56,23 +53,8 @@ const CreateSchool: NextPageWithLayout = () => {
   } = useForm<SchoolType>();
 
   useEffect(() => {
-    const defaultValues = school;
-    reset(defaultValues);
+    reset(school);
   }, [school, reset]);
-
-  /**
-   * @TODO update this to use an Alert instead
-   */
-  useEffect(() => {
-    if (editError && isErrorResponse(editError) && !isUnauthenticatedError(editError)) {
-      toast.error(
-        <Message
-          title="Error"
-          body="Failed to get the school details for editing. Try reloading the page"
-        />,
-      );
-    }
-  }, [editError]);
 
   const onSubmit: SubmitHandler<SchoolType> = async data => {
     setError(false);
@@ -207,30 +189,13 @@ const CreateSchool: NextPageWithLayout = () => {
                     bg-red-600 px-4 py-1 text-sm font-semibold text-white shadow-sm hover:bg-red-700 
                     focus:outline-none focus:ring-1 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                           onClick={deleteSchool}>
-                          {deleteLoading ? (
-                            <div className="flex items-center">
-                              <Spinner className="mr-3" /> Loading...
-                            </div>
-                          ) : (
-                            'Yes, Delete'
-                          )}
+                          <LoadingContent
+                            loading={deleteLoading}
+                            text="Yes, delete"
+                          />
                         </button>
-                      }>
-                      <ScrollContent
-                        title="Add New School"
-                        setOpen={(state: boolean) => setOpen(state)}
-                        body={`Are you sure you want to delete ${school.name}? All of your school data will be removed.`}
-                        button={
-                          <button
-                            type="button"
-                            className="inline-flex w-full items-center justify-center rounded-md border border-transparent
-                                    bg-red-600 px-4 py-1 text-sm font-semibold text-white shadow-sm hover:bg-red-700
-                                    focus:outline-none focus:ring-1 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm">
-                            Save
-                          </button>
-                        }
-                      />
-                    </Modal>
+                      }
+                    />
                   </>
                 )}
               </div>
@@ -240,7 +205,14 @@ const CreateSchool: NextPageWithLayout = () => {
       </header>
       <main>
         <div className="mx-auto max-w-7xl pb-5 sm:px-6 lg:px-8">
-          <div className="max-w-7xl px-0 py-3 pt-10">
+          <div className="max-w-7xl px-0 pb-3">
+            <div className="flex h-10 items-center">
+              <QueryStatus
+                isLoading={schoolLoading}
+                isFetching={schoolFecthing}
+                error={editError}
+              />
+            </div>
             <div className="mb-5 rounded-lg border bg-white px-6 pt-5 shadow-sm sm:px-12 sm:pb-10 ">
               <form
                 noValidate

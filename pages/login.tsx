@@ -9,16 +9,8 @@ import { getLayout } from '@/components/Layouts/FullPageLayout';
 import { auth } from '@/utils/api';
 import PageLoading from '@/components/Loading/Page';
 import Error from '@/components/Error/Page';
-import { NextPageWithLayout } from './_app';
-
-const loginFields = {
-  email: {
-    rules: 'required|email',
-  },
-  password: {
-    rules: 'string|required',
-  },
-};
+import { NextPageWithLayout } from '@/pages/_app';
+import { loginFields } from '@/utils/constants/forms';
 
 const loginForm = addValidation(loginFields);
 

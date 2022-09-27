@@ -7,7 +7,7 @@ import QueryStatus from '@/components/QueryStatus';
 import { schools as schoolsApi } from '@/utils/api/index';
 import useAuth from '@/hooks/useAuth';
 import type { NextPageWithLayout } from '@/pages/_app';
-import { isSchoolListData } from '@/types/index';
+import { isSchoolListData } from '@/types/schools';
 
 const Overview: NextPageWithLayout = () => {
   useAuth({ middleware: 'auth' });
@@ -79,16 +79,6 @@ const Overview: NextPageWithLayout = () => {
                         </div>
 
                         <p className="mb-6 w-full pt-1 text-sm md:w-2/3">{school.about ?? school.slogan ?? <span className="text-xs">No introduction was provided</span>}</p>
-                        {/* <div className="grid grid-cols-6">
-                          <div>
-                            <p className="text-xs font-semibold text-gray-500">Total Students</p>
-                            <p className="text-3xl font-semibold text-gray-800">53</p>
-                          </div>
-                          <div>
-                            <p className="text-xs font-semibold text-gray-500">Total Teachers</p>
-                            <p className="text-3xl font-semibold text-gray-800">12</p>
-                          </div>
-                        </div> */}
                       </div>
                     </div>
                   </div>

@@ -7,7 +7,7 @@ import { NextPageWithLayout } from '@/pages/_app';
 import useAuth from '@/hooks/useAuth';
 import { getLayout } from '@/components/Layouts/UserLayout';
 import { schools } from '@/utils/api';
-import { isSchoolData } from '@/types/index';
+import { isSchoolData } from '@/types/schools';
 import { getDefaultValues } from '@/utils/helpers';
 import Drawer from '@/components/Drawers';
 import InviteDrawer from '@/components/Drawers/InviteDrawer';

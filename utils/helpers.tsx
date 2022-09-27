@@ -1,5 +1,5 @@
 import { ErrorResponseType } from '@/types/index';
-import { UNAUTHENTICATED, UNPROCESSABLE_ENTITY } from './constants';
+import { UNAUTHENTICATED, UNPROCESSABLE_ENTITY } from './constants/index';
 
 /**
  * Merge class names with conditions without the use of template literals

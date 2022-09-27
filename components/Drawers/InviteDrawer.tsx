@@ -1,97 +1,27 @@
 /* eslint-disable max-lines */
 import { useEffect, useState } from 'react';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { z } from 'zod';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import Select, { StylesConfig, OptionsOrGroups, GroupBase } from 'react-select';
+import { OptionsOrGroups, GroupBase } from 'react-select';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import Required from '@/components/Form/Required';
 import { addValidation } from '@/services/Validation';
 import HelpText from '@/components/Form/HelpText';
 import { roles, schools as schoolsApi, invites } from '@/utils/api';
-import { isSchoolListData, isRoleList, InviteType } from '@/types/index';
+import { isRoleList } from '@/types/roles';
+import { isSchoolListData } from '@/types/schools';
 import Message from '@/components/Toast/Message';
 import Spinner from '@/components/Spinner';
-
-const inviteFormSchema = z.object({
-  first_name: z.string(),
-  last_name: z.string().nullable(),
-  email: z.string().email(),
-  role: z.object({
-    value: z.number(),
-    label: z.string(),
-  }),
-  school: z.object({
-    value: z.number(),
-    label: z.string(),
-  }),
-});
-
-type InviteFormType = z.infer<typeof inviteFormSchema>;
+import ReactSelect from '@/components/Form/Select';
+import { InviteType, InviteFormType } from '@/types/invites';
+import { inviteFields } from '@/utils/constants/forms';
 
 type Options = {
   value: number;
   label: string;
 };
 
-const customStyles: StylesConfig<string | { value: number; label: string } | { value: number; label: string }, boolean, GroupBase<Options>> = {
-  input: styles => {
-    return {
-      ...styles,
-      "[type='text']:focus": {
-        boxShadow: 'none',
-      },
-    };
-  },
-  control: (styles, state) => {
-    return {
-      ...styles,
-      paddingTop: '1px',
-      paddingBottom: '0px',
-      borderRadius: '0.375rem',
-      marginTop: '0.25rem',
-      transition: 'none',
-      borderWidth: '1px',
-      borderColor: state.isFocused ? 'rgb(147 197 253)' : 'rgb(209 213 219)',
-      outline: state.isFocused ? '1px solid rgb(147 197 253)' : 'none',
-      '&:hover': {
-        borderColor: state.isFocused ? 'rgb(147 197 253)' : 'rgb(209 213 219)',
-      },
-    };
-  },
-};
-
-/* Error for react select
-const customErrorStyles: StylesConfig<{
-  value: string;
-  label: string;
-}> = {
-  control: (styles, state) => {
-    return {
-      ...styles,
-      paddingTop: '1px',
-      paddingBottom: '0px',
-      borderRadius: '0.375rem',
-      marginTop: '0.25rem',
-      transition: 'none',
-      borderWidth: '1px',
-      borderColor: state.isFocused ? 'rgb(147 197 253)' : 'rgb(209 213 219)',
-      boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-      outline: state.isFocused ? '1px solid rgb(147 197 253)' : 'none',
-      '&:hover': {
-        borderColor: state.isFocused ? 'rgb(147 197 253)' : 'rgb(209 213 219)',
-      },
-    };
-  },
-}; */
-
-const inviteFields = {
-  first_name: { rules: 'required|string' },
-  last_name: { rules: 'present|string' },
-  email: { rules: 'email|required' },
-  role: { rules: 'required|integer' },
-  school: { rules: 'required|integer' },
-};
+type OptionsType = OptionsOrGroups<Options, GroupBase<Options>> | undefined;
 
 const inviteFieldKeys = Object.keys(inviteFields);
 
@@ -102,8 +32,8 @@ type InviteDrawerProps = {
 };
 
 const InviteDrawer = ({ setOpen }: InviteDrawerProps) => {
-  const [roleOptions, setRoleOptions] = useState<OptionsOrGroups<Options, GroupBase<Options>> | undefined>();
-  const [schoolOptions, setSchoolOptions] = useState<OptionsOrGroups<Options, GroupBase<Options>> | undefined>();
+  const [roleOptions, setRoleOptions] = useState<OptionsType>();
+  const [schoolOptions, setSchoolOptions] = useState<OptionsType>();
 
   const {
     register,
@@ -261,22 +191,12 @@ const InviteDrawer = ({ setOpen }: InviteDrawerProps) => {
                 className="block font-semibold text-gray-800">
                 School <Required rules={inviteForm.school.rules} />
               </label>
-              <Controller
+              <ReactSelect
+                id={inviteForm.school.id}
                 name={inviteForm.school.id}
                 control={control}
                 rules={inviteForm.school.validate}
-                render={({ field }) => {
-                  return (
-                    /** @ts-ignore Library issue */
-                    <Select
-                      {...field}
-                      id={inviteForm.school.id}
-                      placeholder=""
-                      options={schoolOptions}
-                      styles={customStyles}
-                    />
-                  );
-                }}
+                options={schoolOptions}
               />
               <HelpText errorMessages={errors?.school?.message as string} />
             </div>
@@ -287,22 +207,12 @@ const InviteDrawer = ({ setOpen }: InviteDrawerProps) => {
                 className="block font-semibold text-gray-800">
                 Role <Required rules={inviteForm.role.rules} />
               </label>
-              <Controller
+              <ReactSelect
+                id={inviteForm.role.id}
                 name={inviteForm.role.id}
                 control={control}
                 rules={inviteForm.role.validate}
-                render={({ field }) => {
-                  return (
-                    /** @ts-ignore Library issue */
-                    <Select
-                      {...field}
-                      id={inviteForm.role.id}
-                      placeholder=""
-                      options={roleOptions}
-                      styles={customStyles}
-                    />
-                  );
-                }}
+                options={roleOptions}
               />
               <HelpText errorMessages={errors?.role?.message as string} />
             </div>
