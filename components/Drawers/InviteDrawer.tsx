@@ -15,6 +15,7 @@ import Spinner from '@/components/Spinner';
 import ReactSelect from '@/components/Form/Select';
 import { InviteType, InviteFormType } from '@/types/invites';
 import { inviteFields } from '@/utils/constants/forms';
+import LoadingContent from '../Button/LoadingContent';
 
 type Options = {
   value: number;
@@ -194,6 +195,7 @@ const InviteDrawer = ({ setOpen }: InviteDrawerProps) => {
               <ReactSelect
                 id={inviteForm.school.id}
                 name={inviteForm.school.id}
+                placeholder=""
                 control={control}
                 rules={inviteForm.school.validate}
                 options={schoolOptions}
@@ -210,6 +212,7 @@ const InviteDrawer = ({ setOpen }: InviteDrawerProps) => {
               <ReactSelect
                 id={inviteForm.role.id}
                 name={inviteForm.role.id}
+                placeholder=""
                 control={control}
                 rules={inviteForm.role.validate}
                 options={roleOptions}
@@ -217,12 +220,12 @@ const InviteDrawer = ({ setOpen }: InviteDrawerProps) => {
               <HelpText errorMessages={errors?.role?.message as string} />
             </div>
           </div>
-          <div className="pt-6 text-right">
+          <div className="flex items-center pt-6 text-right">
             <button
               disabled={inviteMutation.isLoading}
               type="button"
-              className="rounded-md  bg-slate-200 py-2 px-4 text-sm
-                    font-semibold text-gray-700 shadow-sm hover:bg-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2"
+              className="ml-auto rounded-md  bg-slate-200 py-2 px-4 text-sm
+                    font-semibold text-gray-700 shadow-sm hover:bg-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2 "
               onClick={() => setOpen?.(false)}>
               Cancel
             </button>
@@ -231,14 +234,11 @@ const InviteDrawer = ({ setOpen }: InviteDrawerProps) => {
               type="submit"
               className="ml-3 inline-flex justify-center rounded-md border border-transparent
                     bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm
-                      hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2">
-              {inviteMutation.isLoading ? (
-                <div className="flex items-center">
-                  <Spinner className="mr-3" /> Loading...
-                </div>
-              ) : (
-                'Invite'
-              )}
+                      hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-blue-200">
+              <LoadingContent
+                loading={inviteMutation.isLoading}
+                text="Invite"
+              />
             </button>
           </div>
         </div>

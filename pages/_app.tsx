@@ -46,9 +46,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
    */
   useEffect(() => {
     if (!isEmpty(cacheName)) {
-      queryClient.invalidateQueries(['user']);
+      queryClient.removeQueries(['user'], { exact: true });
       setCacheName([]);
-      // console.log('clear the user cache');
+      console.log('clear the user cache', cacheName);
     }
   }, [cacheName, queryClient]);
 

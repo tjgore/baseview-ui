@@ -36,5 +36,5 @@ export const roles = {
 };
 
 export const invites = {
-  create: (data: InviteType) => withCsrf(() => httpRequest.post('/api/invites', { data })),
+  create: (data: InviteType) => withCsrf(() => httpRequest.post('/api/invitess', { data })),
 };

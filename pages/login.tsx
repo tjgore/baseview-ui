@@ -41,8 +41,6 @@ const Login: NextPageWithLayout = () => {
     reset();
   };
 
-  console.log('check data', user, isLoading, '');
-
   if (user || isLoading) {
     return <PageLoading dark />;
   }

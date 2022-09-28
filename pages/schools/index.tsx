@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
+import { isEmpty } from 'lodash';
 import { HomeModernIcon } from '@heroicons/react/24/outline';
 import { EnvelopeOpenIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/solid';
 import { getLayout } from '@/components/Layouts/UserLayout';
@@ -46,7 +47,7 @@ const Overview: NextPageWithLayout = () => {
                 error={error}
               />
             </div>
-            {schools ? (
+            {schools && !isEmpty(schools) ? (
               schools.map(school => (
                 <div
                   key={school.id}
@@ -94,7 +95,7 @@ const Overview: NextPageWithLayout = () => {
                 </div>
               ))
             ) : (
-              <div className="mb-5 hidden rounded-lg border bg-white shadow-sm">
+              <div className="mb-5">
                 <div className="my-20 text-center">
                   <div className="flex justify-center">
                     <HomeModernIcon className="h-10 w-10 text-gray-600" />
@@ -103,12 +104,14 @@ const Overview: NextPageWithLayout = () => {
                   <h3 className="mt-2 text-2xl font-semibold text-gray-900">No School</h3>
                   <p className="mt-1 text-sm text-gray-500">Get started by creating a new school.</p>
                   <div className="mt-6">
-                    <button
-                      type="button"
-                      className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm
-                    font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                      New School
-                    </button>
+                    <Link href="/schools/create">
+                      <a
+                        type="button"
+                        className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm
+                      font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        New School
+                      </a>
+                    </Link>
                   </div>
                 </div>
               </div>

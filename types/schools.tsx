@@ -26,6 +26,6 @@ export type SchoolListType = z.infer<typeof schoolListSchema>;
 export type SchoolType = z.infer<typeof schoolSchema>;
 
 // Guards
-export const isSchoolData = (data): data is SchoolType => schoolSchema.safeParse(data).success;
+export const isSchoolData = (data: unknown): data is SchoolType => schoolSchema.safeParse(data).success;
 
 export const isSchoolListData = (data: unknown): data is SchoolListType => schoolListSchema.safeParse(data).success;
