@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+#__next {
+  padding-bottom: 0px !important;
+}
+
 .PhoneInputInput {
   flex: 1;
   min-width: 0;

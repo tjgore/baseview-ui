@@ -15,6 +15,7 @@ const Overview: NextPageWithLayout = () => {
   const { data, error, isLoading, isFetching } = useQuery(['schools'], schoolsApi.all);
 
   const schools = isSchoolListData(data) ? data : null;
+  const hasSchool = schools && !isEmpty(schools);
 
   return (
     <>
@@ -47,7 +48,7 @@ const Overview: NextPageWithLayout = () => {
                 error={error}
               />
             </div>
-            {schools && !isEmpty(schools) ? (
+            {hasSchool &&
               schools.map(school => (
                 <div
                   key={school.id}
@@ -93,8 +94,8 @@ const Overview: NextPageWithLayout = () => {
                     </Link>
                   </div>
                 </div>
-              ))
-            ) : (
+              ))}
+            {!hasSchool && !isLoading && (
               <div className="mb-5">
                 <div className="my-20 text-center">
                   <div className="flex justify-center">

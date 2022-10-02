@@ -26,3 +26,14 @@ export const loginFields = {
     rules: 'string|required',
   },
 };
+
+export const profileFields = {
+  first_name: { rules: 'required|string' },
+  last_name: { rules: 'required|string' },
+  preferred_name: { rules: 'required|string' },
+  gender: { rules: 'required|string|in:Male,Female,Neither' },
+  dob: { rules: 'required|string' },
+  email: { rules: 'required|email' },
+  mobile: { rules: 'string|present' },
+  address: { rules: 'required|string' },
+};

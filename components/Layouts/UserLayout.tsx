@@ -15,12 +15,12 @@ import Error from '../Error/Page';
 const navigation = [
   { name: 'Overview', href: '/schools/1/overview', current: true },
   { name: 'Classes', href: '/classes', current: false },
-  { name: 'Teachers', href: '#', current: false },
-  { name: 'Students', href: '#', current: false },
-  { name: 'Settings', href: '#', current: false },
+  { name: 'Accounts', href: '/accounts', current: false },
+  { name: 'Schedule', href: '/schedule', current: false },
+  { name: 'Settings', href: '/settings', current: false },
 ];
 const userNavigation = [
-  { name: 'Account', href: '#' },
+  { name: 'Profile', href: '/profile' },
   { name: 'Sign out', href: '/logout' },
 ];
 
@@ -156,11 +156,9 @@ const UserLayout = ({ children }) => {
                           {userNavigation.map(item => (
                             <Menu.Item key={item.name}>
                               {({ active }) => (
-                                <button
-                                  type="button"
-                                  className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200')}>
-                                  {item.name}
-                                </button>
+                                <Link href={item.href}>
+                                  <a className={classNames(active ? 'bg-gray-100' : '', 'block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-200')}>{item.name}</a>
+                                </Link>
                               )}
                             </Menu.Item>
                           ))}

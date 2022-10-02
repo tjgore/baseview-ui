@@ -1,5 +1,6 @@
 import type { LoginDataType } from '@/types/index';
 import type { SchoolType } from '@/types/schools';
+import type { ProfileFormType } from '@/types/profiles';
 import type { InviteType } from '@/types/invites';
 import httpRequest, { NextRequestType } from '@/services/HttpClient';
 
@@ -36,5 +37,10 @@ export const roles = {
 };
 
 export const invites = {
-  create: (data: InviteType) => withCsrf(() => httpRequest.post('/api/invitess', { data })),
+  create: (data: InviteType) => withCsrf(() => httpRequest.post('/api/invites', { data })),
+};
+
+export const profiles = {
+  get: () => httpRequest.get('/api/profiles'),
+  edit: (data: ProfileFormType) => httpRequest.put('/api/profiles', { data }),
 };

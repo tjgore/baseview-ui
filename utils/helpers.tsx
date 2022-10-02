@@ -28,7 +28,9 @@ export const charLimit = (text: string, limit: number) => {
   return updatedText.length <= limit ? updatedText : `${updatedText}...`;
 };
 
-export const getDefaultValues = <T extends { [name in keyof T]: unknown }>(data: T): { [name: string]: string | number | undefined } => {
+export const getDefaultValues = <T extends { [name in keyof T]: unknown }>(
+  data: T,
+): { [name: string]: string | number | { label: string; value: string } | { label: string; value: number } | undefined } => {
   const keys = Object.keys(data ?? {}) as Array<keyof T>;
   const defaults = {};
   keys.forEach(key => {

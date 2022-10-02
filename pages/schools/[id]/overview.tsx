@@ -39,7 +39,7 @@ const Overview: NextPageWithLayout = () => {
                       <a
                         href="#"
                         className="truncate text-sm font-medium text-gray-500 hover:text-gray-700">
-                        {school.name}
+                        {school.name as string}
                       </a>
                     </div>
                   </li>

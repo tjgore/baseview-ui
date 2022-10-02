@@ -67,37 +67,31 @@ const CreateSchool: NextPageWithLayout = () => {
 
   const createOrUpdate = (data: SchoolType) => {
     if (schoolId) {
-      editSchool.mutate(data);
+      editSchool.mutate(data, {
+        onSuccess: () => {
+          toast.success(
+            <Message
+              title="Success"
+              body="School has been updated."
+            />,
+          );
+          refetch();
+        },
+      });
     } else {
-      createSchool.mutate(data);
+      createSchool.mutate(data, {
+        onSuccess: () => {
+          toast.success(
+            <Message
+              title="Success"
+              body="School has been created."
+            />,
+          );
+          router.push('/schools');
+        },
+      });
     }
   };
-
-  // Create
-  useEffect(() => {
-    if (createSchool.isSuccess) {
-      toast.success(
-        <Message
-          title="Success"
-          body="School has been created."
-        />,
-      );
-      router.push('/schools');
-    }
-  }, [createSchool.isSuccess, reset, router]);
-
-  // Edit
-  useEffect(() => {
-    if (editSchool.isSuccess) {
-      toast.success(
-        <Message
-          title="Success"
-          body="School has been updated."
-        />,
-      );
-      refetch();
-    }
-  }, [editSchool.isSuccess, refetch]);
 
   // Delete
   useEffect(() => {
@@ -206,7 +200,7 @@ const CreateSchool: NextPageWithLayout = () => {
       </header>
       <main>
         <div className="mx-auto max-w-7xl pb-5 sm:px-6 lg:px-8">
-          <div className="max-w-7xl px-0 pb-3">
+          <div className="max-w-7xl px-4 pb-3 sm:px-4">
             <div className="flex h-10 items-center">
               {schoolId && (
                 <QueryStatus
@@ -217,20 +211,19 @@ const CreateSchool: NextPageWithLayout = () => {
               )}
             </div>
             {schoolId && schoolQuery.isLoading ? null : (
-              <div className="mb-5 rounded-lg border bg-white px-6 pt-5 shadow-sm sm:px-12 sm:pb-10 ">
+              <div className="mb-5 rounded-lg border bg-white shadow-sm">
+                <div className="border-b px-10 pt-5 pb-3">
+                  <h3 className="text-xl font-medium leading-6 text-gray-900">School Information</h3>
+                  <p className="mt-1 text-xs text-gray-500">Provide details and information for other users needs.</p>
+                  <div className="flex pt-2 text-red-500">{showError && <ErrorText text="An error occurred. Try again." />}</div>
+                </div>
                 <form
                   noValidate
                   onSubmit={handleSubmit(onSubmit)}>
-                  <div className="sm:overflow-hidden">
-                    <div className="space-y-6 p-1">
-                      <div>
-                        <h3 className="text-xl font-medium leading-6 text-gray-900">School Information</h3>
-                        <p className="mt-1 text-xs text-gray-500">Provide details and information for other users needs.</p>
-                        <div className="flex pt-2 text-red-500">{showError && <ErrorText text="An error occurred. Try again." />}</div>
-                      </div>
-
+                  <div className="p-10 sm:overflow-hidden">
+                    <div>
                       <div className="grid grid-cols-6 gap-x-10 gap-y-5">
-                        <div className="col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
                             htmlFor={schoolForm.name.id}
                             className="block font-semibold text-gray-800">
@@ -246,7 +239,7 @@ const CreateSchool: NextPageWithLayout = () => {
                           />
                           <p className="pt-1 text-xs text-red-500">{errors?.name?.message as string}</p>
                         </div>
-                        <div className="col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
                             htmlFor={schoolForm.address.id}
                             className="block font-semibold text-gray-800">
@@ -263,7 +256,7 @@ const CreateSchool: NextPageWithLayout = () => {
                           <p className="pt-1 text-xs text-red-500">{errors?.address?.message as string}</p>
                         </div>
 
-                        <div className="col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
                             htmlFor={schoolForm.email.id}
                             className="block font-semibold text-gray-800">
@@ -280,7 +273,7 @@ const CreateSchool: NextPageWithLayout = () => {
                           <p className="pt-1 text-xs text-red-500">{errors?.email?.message as string}</p>
                         </div>
 
-                        <div className="col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
                             htmlFor={schoolForm.phone.id}
                             className="block font-semibold text-gray-800">
@@ -298,7 +291,7 @@ const CreateSchool: NextPageWithLayout = () => {
                           <p className="pt-1 text-xs text-red-500">{errors?.phone?.message as string}</p>
                         </div>
 
-                        <div className="col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
                             htmlFor={schoolForm.website.id}
                             className="block font-semibold text-gray-800">
@@ -315,7 +308,7 @@ const CreateSchool: NextPageWithLayout = () => {
                           <p className="pt-1 text-xs text-red-500">{errors?.website?.message as string}</p>
                         </div>
 
-                        <div className="col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
                             htmlFor={schoolForm.principal.id}
                             className="block font-semibold text-gray-800">
@@ -332,7 +325,7 @@ const CreateSchool: NextPageWithLayout = () => {
                           <p className="pt-1 text-xs text-red-500">{errors?.principal?.message as string}</p>
                         </div>
 
-                        <div className="col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
                             htmlFor={schoolForm.vice_principal.id}
                             className="block font-semibold text-gray-800">

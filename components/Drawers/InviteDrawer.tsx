@@ -8,6 +8,7 @@ import Required from '@/components/Form/Required';
 import { addValidation } from '@/services/Validation';
 import HelpText from '@/components/Form/HelpText';
 import { roles, schools as schoolsApi, invites } from '@/utils/api';
+import { Options } from '@/types/index';
 import { isRoleList } from '@/types/roles';
 import { isSchoolListData } from '@/types/schools';
 import Message from '@/components/Toast/Message';
@@ -16,11 +17,6 @@ import ReactSelect from '@/components/Form/Select';
 import { InviteType, InviteFormType } from '@/types/invites';
 import { inviteFields } from '@/utils/constants/forms';
 import LoadingContent from '../Button/LoadingContent';
-
-type Options = {
-  value: number;
-  label: string;
-};
 
 type OptionsType = OptionsOrGroups<Options, GroupBase<Options>> | undefined;
 
@@ -51,11 +47,9 @@ const InviteDrawer = ({ setOpen }: InviteDrawerProps) => {
   const onSubmit: SubmitHandler<InviteFormType> = data => {
     const inviteData: InviteType = {};
     inviteFieldKeys.forEach(field => {
-      let fieldValue: string | number | null = null;
       const value = data[field as keyof typeof data];
       if (value && typeof value === 'object' && 'value' in value) {
-        fieldValue = value.value;
-        inviteData[field] = fieldValue;
+        inviteData[field] = value.value;
       } else {
         inviteData[field] = value;
       }

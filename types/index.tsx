@@ -5,6 +5,16 @@ export type LoginDataType = {
   password: string;
 };
 
+export type Options =
+  | {
+      value: number;
+      label: string;
+    }
+  | {
+      value: string;
+      label: string;
+    };
+
 // Error
 const errorResponseSchema = z.object({
   response: z.object({
