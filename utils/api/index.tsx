@@ -21,6 +21,7 @@ export const auth = {
   login: (data: LoginDataType) => withCsrf(() => httpRequest.post('/login', { data })),
   logout: () => httpRequest.post('/logout'),
   user: () => withCsrf(() => httpRequest.get('/api/user')),
+  register: (data: { [name: string]: string }) => httpRequest.post('/register', { data }),
 };
 
 export const schools = {
@@ -38,9 +39,11 @@ export const roles = {
 
 export const invites = {
   create: (data: InviteType) => withCsrf(() => httpRequest.post('/api/invites', { data })),
+  findByToken: (token: string) => httpRequest.get(`/api/invites/${token}`),
 };
 
 export const profiles = {
   get: () => httpRequest.get('/api/profiles'),
+  create: (data: ProfileFormType) => httpRequest.post('/api/profiles', { data }),
   edit: (data: ProfileFormType) => httpRequest.put('/api/profiles', { data }),
 };

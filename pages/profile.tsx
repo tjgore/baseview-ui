@@ -4,7 +4,6 @@ import { z } from 'zod';
 import Avatar from 'boring-avatars';
 import { EnvelopeOpenIcon, PhoneIcon } from '@heroicons/react/24/solid';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { OptionsOrGroups, GroupBase } from 'react-select';
 import PhoneInputWithCountry from 'react-phone-number-input/react-hook-form';
 import 'react-phone-number-input/style.css';
 import DatePicker from 'react-datepicker';
@@ -13,22 +12,13 @@ import { NextPageWithLayout } from '@/pages/_app';
 import { getLayout } from '@/components/Layouts/UserLayout';
 import useProfile from '@/hooks/useProfile';
 import QueryStatus from '@/components/QueryStatus';
-import { profileFields } from '@/utils/constants/forms';
+import { profileFields, genderOptions } from '@/utils/constants/forms';
 import { addValidation } from '@/services/Validation';
 import { ProfileFormType } from '@/types/profiles';
 import Required from '@/components/Form/Required';
 import ReactSelect from '@/components/Form/Select';
-import { Options } from '@/types/index';
 import HelpText from '@/components/Form/HelpText';
 import LoadingContent from '@/components/Button/LoadingContent';
-
-type OptionsType = OptionsOrGroups<Options, GroupBase<Options>> | undefined;
-
-const genderOptions: OptionsType = [
-  { label: 'Male', value: 'Male' },
-  { label: 'Female', value: 'Female' },
-  { label: 'Neither', value: 'Neither' },
-];
 
 const profileForm = addValidation(profileFields);
 const profileKeys = Object.keys(profileFields);
@@ -116,9 +106,9 @@ const Profile: NextPageWithLayout = () => {
               <>
                 <div className="mb-5 rounded-lg border bg-white p-5 shadow-sm">
                   <div className="flex flex-col sm:flex-row">
-                    <div className="mr-5 mb-5 flex h-24 w-24 items-center justify-center rounded-md border bg-blue-600">
+                    <div className="mr-5 mb-5 flex h-24 w-24 items-center justify-center overflow-hidden rounded-md border bg-blue-600">
                       <Avatar
-                        size={120}
+                        size={100}
                         square
                         name={fullName}
                         variant="beam"
@@ -282,7 +272,7 @@ const Profile: NextPageWithLayout = () => {
 
                           <div className="px-10 py-4 sm:grid sm:grid-cols-3">
                             <label
-                              htmlFor="first-name"
+                              htmlFor={profileForm.gender.id}
                               className="block font-semibold text-gray-800">
                               Gender <Required rules={profileForm.gender.rules} />
                             </label>
@@ -302,7 +292,7 @@ const Profile: NextPageWithLayout = () => {
 
                           <div className="bg-gray-50 px-10 py-4 sm:grid sm:grid-cols-3">
                             <label
-                              htmlFor="first-name"
+                              htmlFor={profileForm.dob.id}
                               className="block font-semibold text-gray-800">
                               DOB <Required rules={profileForm.dob.rules} />
                             </label>

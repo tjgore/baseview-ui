@@ -4,7 +4,7 @@ type ObjectType = {
   [name: string]: string;
 };
 
-export type ValueType = string | { label: string; value: string } | { label: string; value: number } | number | null;
+export type ValueType = string | { label: string; value: string } | { label: string; value: number } | number | null | undefined;
 
 type FormFields<U> = { [name: string]: { id?: U; rules: string } };
 
@@ -21,7 +21,7 @@ type AddValidationType = <K extends keyof T, T extends FormFields<K>>(formFields
  * @param fieldData
  * @param rules
  * @param messages
- * @returns string | boolean
+ * @returns string | boolean | undefined
  */
 export const validateField = (fieldData: FieldDataType, rules: ObjectType, messages?: ObjectType) => {
   const fieldName = Object.keys(fieldData)[0];

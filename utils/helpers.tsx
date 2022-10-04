@@ -38,3 +38,15 @@ export const getDefaultValues = <T extends { [name in keyof T]: unknown }>(
   });
   return defaults;
 };
+
+/**
+ * Used to handle the datepicker components dates
+ * @param value
+ * @returns
+ */
+export const getDatePickerDate = (value: Date | string | undefined) => {
+  if (typeof value === 'object' && value !== undefined) {
+    return value;
+  }
+  return value ? new Date(`${value} 00:00`) : new Date();
+};

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { OptionsOrGroups, GroupBase } from 'react-select';
 
 export type LoginDataType = {
   email: string;
@@ -14,6 +15,8 @@ export type Options =
       value: string;
       label: string;
     };
+
+export type OptionsType = OptionsOrGroups<Options, GroupBase<Options>> | undefined;
 
 // Error
 const errorResponseSchema = z.object({

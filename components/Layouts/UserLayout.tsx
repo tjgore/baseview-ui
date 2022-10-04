@@ -10,8 +10,6 @@ import useAuth from '../../hooks/useAuth';
 import PageLoading from '../Loading/Page';
 import Error from '../Error/Page';
 
-// User image 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-
 const navigation = [
   { name: 'Overview', href: '/schools/1/overview', current: true },
   { name: 'Classes', href: '/classes', current: false },
@@ -156,9 +154,11 @@ const UserLayout = ({ children }) => {
                           {userNavigation.map(item => (
                             <Menu.Item key={item.name}>
                               {({ active }) => (
-                                <Link href={item.href}>
-                                  <a className={classNames(active ? 'bg-gray-100' : '', 'block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-200')}>{item.name}</a>
-                                </Link>
+                                <a
+                                  onClick={() => router.push(item.href)}
+                                  className={classNames(active ? 'bg-gray-100' : '', 'block w-full cursor-pointer px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-200')}>
+                                  {item.name}
+                                </a>
                               )}
                             </Menu.Item>
                           ))}

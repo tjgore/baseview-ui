@@ -48,7 +48,7 @@ const formattedProfileSchema = z.object({
     .array(),
 });
 
-const profileFormType = z.object({
+export const profileFormSchema = z.object({
   first_name: z.string(),
   last_name: z.string(),
   email: z.string().email(),
@@ -64,7 +64,7 @@ export type ProfileType = z.infer<typeof profileSchema>;
 
 export type FormattedProfileType = z.infer<typeof formattedProfileSchema>;
 
-export type ProfileFormType = z.infer<typeof profileFormType>;
+export type ProfileFormType = z.infer<typeof profileFormSchema>;
 
 // Guard
 export const isProfile = (data: unknown): data is ProfileType => profileSchema.safeParse(data).success;

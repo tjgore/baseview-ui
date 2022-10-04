@@ -1,3 +1,5 @@
+import { OptionsType } from '@/types/index';
+
 export const inviteFields = {
   first_name: { rules: 'required|string' },
   last_name: { rules: 'present|string' },
@@ -37,3 +39,9 @@ export const profileFields = {
   mobile: { rules: 'string|present' },
   address: { rules: 'required|string' },
 };
+
+export const genderOptions: OptionsType = [
+  { label: 'Male', value: 'Male' },
+  { label: 'Female', value: 'Female' },
+  { label: 'Neither', value: 'Neither' },
+];

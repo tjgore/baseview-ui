@@ -1,7 +1,7 @@
 import ctl from '@netlify/classnames-template-literals';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
-const Error = ({ dark, message }: { dark?: boolean; message?: string }) => {
+const Error = ({ dark, message, noAction }: { dark?: boolean; message?: string; noAction?: boolean }) => {
   const textClassName = ctl(`${dark ? 'text-gray-900' : 'text-white'} mt-3 whitespace-pre-line rounded p-3 text-center text-xl font-semibold`);
 
   return (
@@ -15,13 +15,15 @@ const Error = ({ dark, message }: { dark?: boolean; message?: string }) => {
           {message ?? `An Error occurred. ${'\n'} Please, reload the page.`}
         </p>
         <div className="flex justify-center pt-3">
-          <button
-            type="button"
-            className="inline-flex items-center rounded border border-transparent bg-blue-500 px-4 py-2
+          {noAction ? null : (
+            <button
+              type="button"
+              className="inline-flex items-center rounded border border-transparent bg-blue-500 px-4 py-2
           text-base font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
-            onClick={() => window.location.reload()}>
-            Reload Page
-          </button>
+              onClick={() => window.location.reload()}>
+              Reload Page
+            </button>
+          )}
         </div>
       </div>
     </div>

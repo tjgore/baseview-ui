@@ -58,7 +58,7 @@ const Login: NextPageWithLayout = () => {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="mr-2 h-8 w-8 text-blue-700">
+              className="mr-2 h-8 w-8 text-blue-600">
               <path
                 fillRule="evenodd"
                 d="M1.5 9.832v1.793c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875V9.832a3 3 0 00-.722-1.952l-3.285-3.832A3
