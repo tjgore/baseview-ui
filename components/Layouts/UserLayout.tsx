@@ -11,9 +11,9 @@ import PageLoading from '../Loading/Page';
 import Error from '../Error/Page';
 
 const navigation = [
-  { name: 'Overview', href: '/schools/1/overview', current: true },
-  { name: 'Classes', href: '/classes', current: false },
-  { name: 'Accounts', href: '/accounts', current: false },
+  { name: 'Overview', href: '/schools/1/overview', current: false },
+  { name: 'Classes', href: '/schools/1/classes', current: false },
+  { name: 'Accounts', href: '/schools/1/accounts', current: true },
   { name: 'Schedule', href: '/schedule', current: false },
   { name: 'Settings', href: '/settings', current: false },
 ];

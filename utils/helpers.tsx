@@ -44,7 +44,7 @@ export const getDefaultValues = <T extends { [name in keyof T]: unknown }>(
  * @param value
  * @returns
  */
-export const getDatePickerDate = (value: Date | string | undefined) => {
+export const getDatePickerDate = (value: Date | string | { label: string; value: string } | null | undefined) => {
   if (typeof value === 'object' && value !== undefined) {
     return value;
   }

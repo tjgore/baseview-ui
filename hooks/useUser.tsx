@@ -11,7 +11,7 @@ const userSchema = z.object({
     last_name: z.string(),
     imageUrl: z.string().nullish(),
     email: z.string().email(),
-    email_verified_at: z.boolean().nullish(),
+    email_verified_at: z.string().nullish(),
   }),
   roles: z
     .object({

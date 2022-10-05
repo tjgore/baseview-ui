@@ -7,7 +7,7 @@ const profileSchema = z.object({
   last_name: z.string(),
   imageUrl: z.string().nullish(),
   email: z.string().email(),
-  email_verified_at: z.boolean().nullish(),
+  email_verified_at: z.string().nullish(),
   profile: z.object({
     id: z.number(),
     user_id: z.number(),
@@ -15,7 +15,7 @@ const profileSchema = z.object({
       preferred_name: z.string(),
       gender: z.string(),
       dob: z.string(),
-      mobile: z.string(),
+      mobile: z.string().nullish(),
       address: z.string(),
     }),
   }),
@@ -37,7 +37,7 @@ const formattedProfileSchema = z.object({
   preferred_name: z.string(),
   gender: z.string(),
   dob: z.string(),
-  mobile: z.string(),
+  mobile: z.string().nullish(),
   address: z.string(),
   roles: z
     .object({
@@ -55,7 +55,7 @@ export const profileFormSchema = z.object({
   preferred_name: z.string(),
   gender: z.string(),
   dob: z.string(),
-  mobile: z.string(),
+  mobile: z.string().nullish(),
   address: z.string(),
 });
 

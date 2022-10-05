@@ -52,8 +52,9 @@ export const isInviteData = (data: unknown): data is InviteDataType => inviteDat
 const invitationFormSchema = z
   .object({
     password: z.string(),
-    confirm_password: z.string(),
+    password_confirmation: z.string(),
+    gender: z.object({ label: z.string(), value: z.string() }),
   })
-  .merge(profileFormSchema);
+  .merge(profileFormSchema.omit({ gender: true }));
 
 export type InvitationFormType = z.infer<typeof invitationFormSchema>;
