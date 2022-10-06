@@ -112,11 +112,11 @@ const Profile: NextPageWithLayout = () => {
             </div>
             {profile && (
               <>
-                <div className="mb-5 rounded-lg border bg-white p-5 shadow-sm">
+                <div className="mb-5 rounded-lg border bg-white px-5 pt-8 pb-5 shadow-sm">
                   <div className="flex flex-col sm:flex-row">
-                    <div className="h-25 w-25 mr-8 mb-5 flex items-center justify-center overflow-hidden rounded-full border bg-blue-600">
+                    <div className="mr-8 mb-5 flex h-[7rem] w-[7rem] items-center justify-center overflow-hidden rounded-full bg-blue-600">
                       <Avatar
-                        size={100}
+                        size={124}
                         name={fullName}
                         variant="beam"
                         colors={['#2563eb', '#4f46e5', '#0f172a']}

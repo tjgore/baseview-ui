@@ -52,7 +52,7 @@ const Overview: NextPageWithLayout = () => {
               schools.map(school => (
                 <div
                   key={school.id}
-                  className="mb-8 rounded-lg border bg-white px-5 pt-5 pb-4 shadow-sm md:px-5 md:pt-8">
+                  className="mb-8 overflow-hidden rounded-lg border bg-white px-5 pt-5 pb-4 shadow-sm md:px-5 md:pt-8">
                   <div className="flex flex-col sm:flex-row">
                     <div className="mr-8 mb-2 flex h-24 w-24 items-center justify-center rounded-md border-2 bg-gray-200 sm:mb-0">
                       <HomeModernIcon

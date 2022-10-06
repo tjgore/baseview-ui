@@ -6,10 +6,11 @@ import { schools as schoolsApi } from '@/utils/api';
 
 type UseSchoolType = {
   schoolId?: string | string[];
+  dependsOn?: unknown;
 };
 
-const useSchool = ({ schoolId }: UseSchoolType) => {
-  const schoolQuery = useQuery(['school', schoolId], () => schoolsApi.findById(schoolId), { enabled: !!schoolId });
+const useSchool = ({ schoolId, dependsOn = true }: UseSchoolType) => {
+  const schoolQuery = useQuery(['school', schoolId], () => schoolsApi.findById(schoolId), { enabled: !!schoolId && !!dependsOn });
   const { data } = schoolQuery;
 
   const school: SchoolType | null = isSchoolData(data) ? data : null;

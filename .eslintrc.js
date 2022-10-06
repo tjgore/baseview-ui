@@ -63,7 +63,6 @@ module.exports = {
     'no-alert': 'error',
     'no-console': 'warn', // turn back on after greenfield work
     'no-else-return': 'warn',
-    'no-magic-numbers': ['warn', { ignoreArrayIndexes: true, enforceConst: true, detectObjects: false }],
     'no-mixed-operators': 'warn',
     'no-nested-ternary': 'error',
     'no-var': 'error',

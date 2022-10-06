@@ -35,13 +35,13 @@ const Drawer = ({ title, description, open, setOpen, children }: DrawerProps) =>
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-lg">
                   <div className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
                     <div className="h-0 flex-1 overflow-y-auto">
-                      <div className="bg-blue-600 py-6 px-4 sm:px-6">
+                      <div className="bg-gray-700 py-6 px-4 sm:px-6">
                         <div className="flex items-center justify-between">
                           <Dialog.Title className="text-xl font-semibold text-white">{title}</Dialog.Title>
                           <div className="ml-3 flex h-7 items-center">
                             <button
                               type="button"
-                              className="rounded-md bg-blue-600 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                              className="rounded-md bg-gray-700 text-gray-100 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
                               onClick={() => setOpen(false)}>
                               <span className="sr-only">Close panel</span>
                               <XMarkIcon
@@ -52,7 +52,7 @@ const Drawer = ({ title, description, open, setOpen, children }: DrawerProps) =>
                           </div>
                         </div>
                         <div className="mt-1">
-                          <p className="pt-1 text-sm text-blue-100">{description ?? null}</p>
+                          <p className="pt-1 text-sm text-gray-100">{description ?? null}</p>
                         </div>
                       </div>
                       <div className="flex flex-1 flex-col px-4 pt-6 pb-5 sm:px-6">{children}</div>

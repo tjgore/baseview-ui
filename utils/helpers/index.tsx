@@ -1,14 +1,5 @@
 import { ErrorResponseType } from '@/types/index';
-import { UNAUTHENTICATED, UNPROCESSABLE_ENTITY } from './constants/index';
-
-/**
- * Merge class names with conditions without the use of template literals
- * @param classes string[]
- * @returns string
- */
-export const classNames = (...classes: string[]) => {
-  return classes.filter(Boolean).join(' ');
-};
+import { UNAUTHENTICATED, UNPROCESSABLE_ENTITY } from '../constants/index';
 
 export const isUnauthenticatedError = (error: ErrorResponseType | null) => {
   return error?.response?.status === UNAUTHENTICATED;
@@ -22,10 +13,12 @@ export const canHandleError = (error: ErrorResponseType | null) => {
   return isUnauthenticatedError(error) || isValidationError(error);
 };
 
-export const charLimit = (text: string, limit: number) => {
-  const textStart = 0;
-  const updatedText = text.substring(textStart, limit).trimEnd();
-  return updatedText.length <= limit ? updatedText : `${updatedText}...`;
+export const charLimit = (text: string | undefined, limit: number) => {
+  if (text === undefined) {
+    return text;
+  }
+  const updatedText = text.substring(0, limit).trimEnd();
+  return text.length <= limit ? updatedText : `${updatedText}...`;
 };
 
 export const getDefaultValues = <T extends { [name in keyof T]: unknown }>(
