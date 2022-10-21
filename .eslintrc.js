@@ -17,13 +17,6 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   ignorePatterns: ['.eslintrc.js', 'lint-staged.config.js', 'postcss.config.js', 'next.config.js', 'tailwind.config.js', 'prettier.config.js'], // prevent eslint from scanning this file
   rules: {
-    'react/button-has-type': [
-      'warn',
-      {
-        button: true,
-        submit: true,
-      },
-    ],
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/prefer-nullish-coalescing': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',

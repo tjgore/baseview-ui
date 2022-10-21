@@ -47,3 +47,7 @@ export const profiles = {
   create: (data: { [name: string]: string | null | undefined }) => httpRequest.post('/api/profiles', { data }),
   edit: (data: ProfileFormType) => httpRequest.put('/api/profiles', { data }),
 };
+
+export const accounts = {
+  get: (id: string, query: string) => httpRequest.get(`/api/schools/${id}/accounts?${query}`),
+};

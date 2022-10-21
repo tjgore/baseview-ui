@@ -9,6 +9,7 @@ import { schools as schoolsApi } from '@/utils/api/index';
 import useAuth from '@/hooks/useAuth';
 import type { NextPageWithLayout } from '@/pages/_app';
 import { isSchoolListData } from '@/types/schools';
+import PageHeader from '@/components/PageHeader';
 
 const Overview: NextPageWithLayout = () => {
   useAuth({ middleware: 'auth' });
@@ -19,26 +20,19 @@ const Overview: NextPageWithLayout = () => {
 
   return (
     <>
-      <header className="bg-white shadow-sm">
-        <div className="mx-auto max-w-7xl p-5 sm:px-6 lg:px-8">
-          <div className="md:flex md:items-center md:justify-between">
-            <div className="min-w-0 flex-1">
-              <h2 className="text-2xl font-semibold leading-7 text-gray-900 sm:truncate sm:tracking-tight">My Schools</h2>
-              <p className="pt-1 text-sm text-gray-500 md:block">A listing of all the schools you belong to.</p>
-            </div>
-            <div className="mt-4 flex md:mt-0 md:ml-4">
-              <Link href="/schools/create">
-                <a
-                  className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm
-                  font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:ring-offset-2">
-                  Create School
-                </a>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
       <main>
+        <PageHeader
+          title="My Schools"
+          actions={
+            <Link href="/schools/create">
+              <a
+                className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm
+                  font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:ring-offset-2">
+                Create School
+              </a>
+            </Link>
+          }
+        />
         <div className="mx-auto max-w-7xl pb-5 sm:px-6 lg:px-8">
           <div className="px-4 pb-3 sm:px-0 ">
             <div className="flex h-10 items-center">
