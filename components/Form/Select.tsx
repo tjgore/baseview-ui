@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import Select, { StylesConfig, OptionsOrGroups, GroupBase } from 'react-select';
-import { Controller } from 'react-hook-form';
+import Select, { StylesConfig, GroupBase, MultiValue, SingleValue } from 'react-select';
+import { Controller, Control } from 'react-hook-form';
 import { ValueType } from '@/services/Validation';
+import { OptionsType } from '@/types/index';
 
-type Options = string | { value: number; label: string } | { value: string; label: string } | { value: number; label: string };
+type Options = { value: number; label: string } | { value: string; label: string };
 
 const customStyles: StylesConfig<Options, boolean, GroupBase<Options>> = {
   input: styles => {
@@ -59,29 +59,49 @@ const customErrorStyles: StylesConfig<{
 type SelectType = {
   id: string;
   name: string;
-  control: any;
+  control: Control<any, any>;
   rules:
     | {
         validate: (value: ValueType) => string | boolean;
       }
     | undefined;
   placeholder?: string;
-  options: OptionsOrGroups<any, GroupBase<Options>> | undefined;
+  options: OptionsType;
 };
 
 const ReactSelect = ({ id, name, control, rules, placeholder, options }: SelectType) => {
+  /**
+   * Get the default value
+   * @param value string
+   * @returns
+   */
+  const getDefault = (value: string) => {
+    const defaultOption = options?.filter(option => {
+      if ('value' in option) {
+        return option?.value === value;
+      }
+    });
+    return defaultOption?.[0] as Options;
+  };
+
+  const getValueFromOption = (selectedOption: MultiValue<Options> | SingleValue<Options>) => {
+    return selectedOption && !Array.isArray(selectedOption) && 'value' in selectedOption ? selectedOption.value : '';
+  };
+
   return (
     <Controller
       name={name}
       control={control}
       rules={rules}
       render={({ field }) => {
+        const value = typeof field.value === 'string' ? field.value : '';
         return (
-          /** @ts-ignore Library issue */
           <Select
             {...field}
             id={id}
             placeholder={placeholder}
+            value={getDefault(value)}
+            onChange={selectedOption => field.onChange(getValueFromOption(selectedOption))}
             options={options}
             styles={customStyles}
           />

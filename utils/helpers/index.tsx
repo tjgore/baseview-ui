@@ -21,6 +21,7 @@ export const charLimit = (text: string | undefined, limit: number) => {
   return text.length <= limit ? updatedText : `${updatedText}...`;
 };
 
+/** @TODO this is not used */
 export const getDefaultValues = <T extends { [name in keyof T]: unknown }>(
   data: T,
 ): { [name: string]: string | number | { label: string; value: string } | { label: string; value: number } | undefined } => {

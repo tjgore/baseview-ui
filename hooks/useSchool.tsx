@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { getDefaultValues } from '@/utils/helpers';
 import { isSchoolData, SchoolType } from '@/types/schools';
 import { schools as schoolsApi } from '@/utils/api';
 
@@ -14,7 +13,7 @@ const useSchool = ({ schoolId, dependsOn = true }: UseSchoolType) => {
   const { data } = schoolQuery;
 
   const school: SchoolType | null = isSchoolData(data) ? data : null;
-  const schoolDefaultValues = useMemo(() => (isSchoolData(data) ? getDefaultValues(data) : {}), [data]);
+  const schoolDefaultValues = useMemo(() => (isSchoolData(data) ? data : {}), [data]);
 
   const createSchool = useMutation((data: SchoolType) => {
     return schoolsApi.create(data);

@@ -2,25 +2,20 @@
 import { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { OptionsOrGroups, GroupBase } from 'react-select';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import Required from '@/components/Form/Required';
 import { addValidation } from '@/services/Validation';
 import HelpText from '@/components/Form/HelpText';
 import { roles, schools as schoolsApi, invites } from '@/utils/api';
-import { Options } from '@/types/index';
+import { OptionsType } from '@/types/index';
 import { isRoleList } from '@/types/roles';
 import { isSchoolListData } from '@/types/schools';
 import Message from '@/components/Toast/Message';
 import Spinner from '@/components/Spinner';
 import ReactSelect from '@/components/Form/Select';
-import { InviteType, InviteFormType } from '@/types/invites';
+import { InviteType } from '@/types/invites';
 import { inviteFields } from '@/utils/constants/forms';
 import LoadingContent from '../Button/LoadingContent';
-
-type OptionsType = OptionsOrGroups<Options, GroupBase<Options>> | undefined;
-
-const inviteFieldKeys = Object.keys(inviteFields);
 
 const inviteForm = addValidation(inviteFields);
 
@@ -38,24 +33,14 @@ const InviteDrawer = ({ setOpen }: InviteDrawerProps) => {
     reset,
     control,
     formState: { errors },
-  } = useForm<InviteFormType>();
+  } = useForm<InviteType>();
 
   const inviteMutation = useMutation((data: InviteType) => {
     return invites.create(data);
   });
 
-  const onSubmit: SubmitHandler<InviteFormType> = data => {
-    const inviteData: InviteType = {};
-    inviteFieldKeys.forEach(field => {
-      const value = data[field as keyof typeof data];
-      if (value && typeof value === 'object' && 'value' in value) {
-        inviteData[field] = value.value;
-      } else {
-        inviteData[field] = value;
-      }
-    });
-
-    inviteMutation.mutate(inviteData);
+  const onSubmit: SubmitHandler<InviteType> = data => {
+    inviteMutation.mutate(data);
   };
 
   useEffect(() => {
@@ -66,11 +51,7 @@ const InviteDrawer = ({ setOpen }: InviteDrawerProps) => {
           body="Invite has been sent."
         />,
       );
-      const resetValues = {};
-      inviteFieldKeys.forEach(field => {
-        resetValues[field] = null;
-      });
-      reset(resetValues);
+      reset();
     }
     if (inviteMutation.isError) {
       toast.error(

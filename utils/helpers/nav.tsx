@@ -1,6 +1,8 @@
 let cacheSchoolId: string | string[] | undefined = '';
 
-type BuildPrimaryNavType = (pathname: string, { schoolId }: { schoolId: string | string[] | undefined }) => { id: string; name: string; link: string; current: boolean }[];
+type PrimaryNavType = { id: string; name: string; link: string; current: boolean };
+
+type BuildPrimaryNavType = (pathname: string, { schoolId }: { schoolId: string | string[] | undefined }) => PrimaryNavType[];
 
 export const buildPrimaryNav: BuildPrimaryNavType = (pathname, { schoolId }) => {
   cacheSchoolId = schoolId ? schoolId : cacheSchoolId;
@@ -18,9 +20,16 @@ export const buildPrimaryNav: BuildPrimaryNavType = (pathname, { schoolId }) => 
 
   const currentPath = pathname.replace('[id]', cacheSchoolId as string);
 
+  return setCurrent(primaryNavigation, currentPath);
+};
+
+/** Set current url path for the primary navigation */
+const setCurrent = (primaryNavigation: PrimaryNavType[], pathname: string) => {
+  const currentPath = pathname.replace('[id]', cacheSchoolId as string);
+
   return primaryNavigation.map(nav => {
     nav.link = `/schools/${cacheSchoolId}${nav.link}`;
-    nav.current = nav.link === currentPath;
+    nav.current = nav.link === currentPath || currentPath.includes(nav.link);
     return nav;
   });
 };

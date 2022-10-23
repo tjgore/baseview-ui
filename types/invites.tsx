@@ -1,34 +1,13 @@
 import { z } from 'zod';
-import { profileFormSchema } from '@/types/profiles';
+//import { profileFormSchema } from '@/types/profiles';
 
-// Invites
-const inviteSchema = z
-  .object({
-    first_name: z.string(),
-    last_name: z.string().nullable(),
-    email: z.string().email(),
-    role: z.number(),
-    school: z.number(),
-  })
-  .or(z.object({}));
-
-const inviteFormSchema = z.object({
-  first_name: z.string(),
-  last_name: z.string().nullable(),
-  email: z.string().email(),
-  role: z.object({
-    value: z.number(),
-    label: z.string(),
-  }),
-  school: z.object({
-    value: z.number(),
-    label: z.string(),
-  }),
-});
-
-export type InviteType = z.infer<typeof inviteSchema>;
-
-export type InviteFormType = z.infer<typeof inviteFormSchema>;
+export type InviteType = {
+  last_name: string | null;
+  first_name: string;
+  email: string;
+  school: number;
+  role: number;
+};
 
 const inviteDataSchema = z.object({
   id: z.number(),
@@ -49,12 +28,16 @@ export type InviteDataType = z.infer<typeof inviteDataSchema>;
 
 export const isInviteData = (data: unknown): data is InviteDataType => inviteDataSchema.safeParse(data).success;
 
-const invitationFormSchema = z
-  .object({
-    password: z.string(),
-    password_confirmation: z.string(),
-    gender: z.object({ label: z.string(), value: z.string() }),
-  })
-  .merge(profileFormSchema.omit({ gender: true }));
-
-export type InvitationFormType = z.infer<typeof invitationFormSchema>;
+// Invitation
+export type InvitationFormType = {
+  mobile?: string | null | undefined;
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+  gender: string;
+  preferred_name: string;
+  dob: string;
+  address: string;
+};

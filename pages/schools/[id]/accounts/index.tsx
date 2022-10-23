@@ -13,7 +13,7 @@ import { NextPageWithLayout } from '@/pages/_app';
 import { getLayout } from '@/components/Layouts/UserLayout';
 import useAuth from '@/hooks/useAuth';
 import PageHeader from '@/components/PageHeader';
-import Button from '@/components/Button';
+import ButtonLink from '@/components/Button/Link';
 import { ROLES } from '@/utils/constants/roles';
 import { RoleListType } from '@/types/roles';
 import { accounts as accountsApi } from '@/utils/api';
@@ -97,6 +97,7 @@ const accountsResponseSchema = z.object({
   current_page: z.number(),
   data: z.array(
     z.object({
+      id: z.number(),
       first_name: z.string(),
       last_name: z.string(),
       email: z.string(),
@@ -177,7 +178,12 @@ const Accounts: NextPageWithLayout = () => {
       <main>
         <PageHeader
           title="Account Page"
-          actions={<Button text="Create New" />}
+          actions={
+            <ButtonLink
+              href={`/schools/${schoolId}/accounts/create`}
+              text="Create New"
+            />
+          }
         />
 
         <div className="mx-auto max-w-7xl pb-5 sm:px-6 lg:px-8">
@@ -197,7 +203,9 @@ const Accounts: NextPageWithLayout = () => {
                             ${tab.current ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} flex items-center gap-2
                             whitespace-nowrap border-b-2 px-1 py-4 text-sm font-semibold`)}
                       aria-current={tab.current ? 'page' : undefined}>
-                      {tab.current && <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-[10px] text-white">{accounts?.total ?? 0}</span>}
+                      {tab.current && (
+                        <span className="flex h-5 w-8 items-center justify-center rounded-full bg-blue-100 text-[10px] font-bold text-blue-700">{accounts?.total ?? 0}</span>
+                      )}
                       {tab.name}
                     </a>
                   </Link>
@@ -253,20 +261,28 @@ const Accounts: NextPageWithLayout = () => {
                 className="grid min-h-[calc(100vh-530px)] grid-cols-1 items-start gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {accounts?.data.map(person => (
                   <li
-                    key={person.email}
-                    className="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow">
+                    key={person.id}
+                    className="group col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow">
                     <div className="flex flex-1 flex-col p-8">
-                      <div className="mx-auto mb-1 flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-blue-600">
-                        <Avatar
-                          size={124}
-                          name={person.first_name + person.last_name}
-                          variant="beam"
-                          colors={['#2563eb', '#4f46e5', '#0f172a']}
-                        />
-                      </div>
+                      <Link href={`/schools/${schoolId}/accounts/${person.id}`}>
+                        <a className="mx-auto mb-1 flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-blue-600 group-hover:animate-bounce">
+                          <Avatar
+                            size={124}
+                            name={person.first_name + person.last_name}
+                            variant="beam"
+                            colors={['#2563eb', '#4f46e5', '#0f172a']}
+                          />
+                        </a>
+                      </Link>
+
                       <h3 className="mt-6 text-sm font-medium text-gray-900">
-                        {person.first_name} {person.last_name}
+                        <Link href={`/schools/${schoolId}/accounts/${person.id}`}>
+                          <a>
+                            {person.first_name} {person.last_name}
+                          </a>
+                        </Link>
                       </h3>
+
                       <dl className="mt-1 flex grow flex-col justify-between">
                         <dt className="sr-only">Title</dt>
                         <dd className="text-sm text-gray-500">{person.email}</dd>

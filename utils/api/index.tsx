@@ -50,4 +50,9 @@ export const profiles = {
 
 export const accounts = {
   get: (id: string, query: string) => httpRequest.get(`/api/schools/${id}/accounts?${query}`),
+  find: (id: string, userId: string) => httpRequest.get(`/api/schools/${id}/accounts/${userId}`),
+};
+
+export const overview = {
+  count: (id: string) => httpRequest.get(`/api/schools/${id}/overview/count`),
 };

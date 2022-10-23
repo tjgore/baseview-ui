@@ -80,8 +80,8 @@ const Invite: NextPageWithLayout = () => {
 
   const onSubmit: SubmitHandler<InvitationFormType> = data => {
     const { first_name, last_name, email, password, password_confirmation, preferred_name, dob, gender, mobile, address } = data;
-    const { value: genderValue } = gender;
 
+    // @TODO combine createAccount and create profile into one call
     createAccount.mutate(
       {
         invite_id: invite?.id,
@@ -96,7 +96,7 @@ const Invite: NextPageWithLayout = () => {
           createProfile.mutate({
             preferred_name,
             dob,
-            gender: genderValue,
+            gender,
             mobile,
             address,
           });
@@ -146,7 +146,7 @@ const Invite: NextPageWithLayout = () => {
   }
 
   return (
-    <div className="pt-20 pb-14">
+    <div className="mx-auto max-w-4xl pt-20 pb-14">
       <div className="mb-4 flex items-center justify-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -186,7 +186,7 @@ const Invite: NextPageWithLayout = () => {
                 <p className="mt-1 text-sm text-gray-500">This information is used to create and login into your account.</p>
               </div>
               <div className="mt-5 grid grid-cols-6 space-y-6 md:col-span-2 md:mt-0">
-                <div className="col-span-6 sm:col-span-4">
+                <div className="col-span-6">
                   <label
                     htmlFor={invitationForm.email.id}
                     className="block font-semibold text-gray-800">
@@ -254,7 +254,7 @@ const Invite: NextPageWithLayout = () => {
             </div>
           </div>
           <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:p-6">
-            <div className="md:grid md:grid-cols-3 md:gap-6">
+            <div className="pb-8 md:grid md:grid-cols-3 md:gap-6">
               <div className="md:col-span-1">
                 <h3 className="text-lg font-medium leading-6 text-gray-900">Personal Information</h3>
                 <p className="mt-1 text-sm text-gray-500">This information is used to create your profile.</p>
@@ -316,7 +316,7 @@ const Invite: NextPageWithLayout = () => {
                     />
                   </div>
 
-                  <div className="col-span-6 sm:col-span-4">
+                  <div className="col-span-6">
                     <label
                       htmlFor={invitationForm.gender.id}
                       className="block font-semibold text-gray-800">
@@ -334,7 +334,7 @@ const Invite: NextPageWithLayout = () => {
                     <HelpText errorMessages={errors?.gender?.message as string} />
                   </div>
 
-                  <div className="col-span-6 sm:col-span-4">
+                  <div className="col-span-6">
                     <label
                       htmlFor={invitationForm.dob.id}
                       className="block font-semibold text-gray-800">
@@ -364,7 +364,7 @@ const Invite: NextPageWithLayout = () => {
                     <HelpText errorMessages={errors?.dob?.message as string} />
                   </div>
 
-                  <div className="col-span-6 sm:col-span-4">
+                  <div className="col-span-6">
                     <label
                       htmlFor={invitationForm.mobile.id}
                       className="block font-semibold text-gray-800">
