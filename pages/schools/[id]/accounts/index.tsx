@@ -197,7 +197,8 @@ const Accounts: NextPageWithLayout = () => {
                     key={tab.name}
                     href={{
                       query: tab.query,
-                    }}>
+                    }}
+                    scroll={false}>
                     <a
                       className={ctl(`
                             ${tab.current ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} flex items-center gap-2
@@ -268,7 +269,7 @@ const Accounts: NextPageWithLayout = () => {
                         <a className="mx-auto mb-1 flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-blue-600 group-hover:animate-bounce">
                           <Avatar
                             size={124}
-                            name={person.first_name + person.last_name}
+                            name={`${person.first_name} ${person.last_name}`}
                             variant="beam"
                             colors={['#2563eb', '#4f46e5', '#0f172a']}
                           />

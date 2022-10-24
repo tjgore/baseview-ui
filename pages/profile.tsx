@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { useState, useEffect } from 'react';
 import { isEmpty } from 'lodash';
 import Avatar from 'boring-avatars';
@@ -224,7 +223,7 @@ const Profile: NextPageWithLayout = () => {
                             id={profileForm.preferred_name.id}
                             autoComplete={profileForm.preferred_name.id}
                             {...register(profileForm.preferred_name.id, profileForm.preferred_name.validate)}
-                            className="block w-full max-w-lg rounded-md border border-gray-300 py-2 px-3
+                            className="mt-1 block w-full max-w-lg rounded-md border border-gray-300 py-2 px-3
                         shadow-sm focus:border-blue-300 focus:outline-none focus:ring-blue-300 sm:text-sm"
                           />
                           <HelpText

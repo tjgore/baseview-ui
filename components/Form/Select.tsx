@@ -5,7 +5,7 @@ import { OptionsType } from '@/types/index';
 
 type Options = { value: number; label: string } | { value: string; label: string };
 
-const customStyles: StylesConfig<Options, boolean, GroupBase<Options>> = {
+const customStyles: StylesConfig<Options | GroupBase<Options>, boolean, GroupBase<Options>> = {
   input: styles => {
     return {
       ...styles,
@@ -17,7 +17,7 @@ const customStyles: StylesConfig<Options, boolean, GroupBase<Options>> = {
   control: (styles, state) => {
     return {
       ...styles,
-      paddingTop: '1px',
+      paddingTop: '0px',
       paddingBottom: '0px',
       borderRadius: '0.375rem',
       marginTop: '0.25rem',
@@ -67,25 +67,49 @@ type SelectType = {
     | undefined;
   placeholder?: string;
   options: OptionsType;
+  isMulti?: boolean;
 };
 
-const ReactSelect = ({ id, name, control, rules, placeholder, options }: SelectType) => {
+const ReactSelect = ({ id, name, control, rules, placeholder, options, isMulti }: SelectType) => {
   /**
    * Get the default value
    * @param value string
    * @returns
    */
-  const getDefault = (value: string) => {
+  const getDefault = (value: string | string[]) => {
+    const isValueType = typeof value === 'string';
+
     const defaultOption = options?.filter(option => {
-      if ('value' in option) {
-        return option?.value === value;
+      let foundOption = false;
+      const optionValue = 'value' in option ? option?.value : '';
+
+      if (isValueType || typeof value === 'number') {
+        foundOption = optionValue === value;
+      } else if (Array.isArray(value)) {
+        foundOption = value.filter(v => v === optionValue).length > 0;
       }
+
+      return foundOption;
     });
-    return defaultOption?.[0] as Options;
+
+    return isValueType ? defaultOption?.[0] : defaultOption;
   };
 
-  const getValueFromOption = (selectedOption: MultiValue<Options> | SingleValue<Options>) => {
-    return selectedOption && !Array.isArray(selectedOption) && 'value' in selectedOption ? selectedOption.value : '';
+  /**
+   * Get Value for onChange event
+   * @param selectedOption
+   * @returns
+   */
+  const getOnChangeValue = (selectedOption: SingleValue<Options | GroupBase<Options>> | MultiValue<Options | GroupBase<Options>>) => {
+    if (selectedOption && !Array.isArray(selectedOption)) {
+      return 'value' in selectedOption ? selectedOption.value : '';
+    }
+    if (selectedOption && Array.isArray(selectedOption)) {
+      return selectedOption.map(selected => {
+        const multiSelected = selected as Options;
+        return multiSelected.value;
+      });
+    }
   };
 
   return (
@@ -94,14 +118,20 @@ const ReactSelect = ({ id, name, control, rules, placeholder, options }: SelectT
       control={control}
       rules={rules}
       render={({ field }) => {
-        const value = typeof field.value === 'string' ? field.value : '';
+        let fieldValue: string | string[] = '';
+        if (typeof field.value === 'string') {
+          fieldValue = field.value;
+        } else if (Array.isArray(field.value)) {
+          fieldValue = field.value;
+        }
         return (
           <Select
             {...field}
             id={id}
             placeholder={placeholder}
-            value={getDefault(value)}
-            onChange={selectedOption => field.onChange(getValueFromOption(selectedOption))}
+            value={getDefault(fieldValue)}
+            onChange={selectedOption => field.onChange(getOnChangeValue(selectedOption))}
+            isMulti={isMulti}
             options={options}
             styles={customStyles}
           />

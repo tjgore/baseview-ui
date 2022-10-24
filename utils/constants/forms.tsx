@@ -1,4 +1,5 @@
 import { OptionsType } from '@/types/index';
+import { ROLES, ROLE_IDS } from './roles';
 
 export const inviteFields = {
   first_name: { rules: 'required|string' },
@@ -44,4 +45,10 @@ export const genderOptions: OptionsType = [
   { label: 'Male', value: 'Male' },
   { label: 'Female', value: 'Female' },
   { label: 'Neither', value: 'Neither' },
+];
+
+export const roleOptions: OptionsType = [
+  { label: ROLES.ADMIN, value: ROLE_IDS.ADMIN },
+  { label: ROLES.TEACHER, value: ROLE_IDS.TEACHER },
+  { label: ROLES.STUDENT, value: ROLE_IDS.STUDENT },
 ];

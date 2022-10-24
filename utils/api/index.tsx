@@ -35,6 +35,7 @@ export const schools = {
 
 export const roles = {
   school: () => httpRequest.get('/api/roles'),
+  update: (id: string, userId: string, data: { roles: number[] }) => withCsrf(() => httpRequest.put(`/api/schools/${id}/accounts/${userId}/role`, { data })),
 };
 
 export const invites = {
@@ -51,6 +52,7 @@ export const profiles = {
 export const accounts = {
   get: (id: string, query: string) => httpRequest.get(`/api/schools/${id}/accounts?${query}`),
   find: (id: string, userId: string) => httpRequest.get(`/api/schools/${id}/accounts/${userId}`),
+  updateProfile: (id: string, profileId: string, data: ProfileFormType) => withCsrf(() => httpRequest.put(`/api/schools/${id}/profiles/${profileId}`, { data })),
 };
 
 export const overview = {

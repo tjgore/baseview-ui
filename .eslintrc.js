@@ -76,7 +76,7 @@ module.exports = {
     'max-lines': [
       'error',
       {
-        max: 300,
+        max: 3000, // reduce to 500
         skipComments: true,
       },
     ], // max lines per file

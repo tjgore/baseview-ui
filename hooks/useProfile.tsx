@@ -30,8 +30,8 @@ const formatProfile = (profileData: unknown): FormattedProfileType | null => {
   };
 };
 
-const useProfile = () => {
-  const profileQuery = useQuery(['profile'], profileApi.get);
+const useProfile = (enabled = true) => {
+  const profileQuery = useQuery(['profile'], profileApi.get, { enabled });
   const { data } = profileQuery;
 
   const profileDefaultValues = useMemo(() => {
