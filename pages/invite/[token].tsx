@@ -13,7 +13,7 @@ import 'react-phone-number-input/style.css';
 import { NextPageWithLayout } from '@/pages/_app';
 import { getLayout } from '@/components/Layouts/FullPageLayout';
 import useAuth from '@/hooks/useAuth';
-import { auth, invites as invitesApi, profiles as profilesApi } from '@/utils/api';
+import { invites as invitesApi } from '@/utils/api';
 import PageLoading from '@/components/Loading/Page';
 import { profileFields, genderOptions } from '@/utils/constants/forms';
 import { addValidation } from '@/services/Validation';
@@ -35,13 +35,12 @@ const invitationFields = {
 const invitationForm = addValidation(invitationFields);
 
 const Invite: NextPageWithLayout = () => {
-  useAuth({ middleware: 'guest' });
+  const { isLoading: userIsLoading } = useAuth({ middleware: 'guest' });
   const [passwordMatch, setPasswordMatch] = useState<boolean | null>(null);
   const router = useRouter();
   const token = typeof router.query.token === 'string' ? router.query.token : '';
 
   const { data, isLoading, error } = useQuery(['invite', token], () => invitesApi.findByToken(token), { enabled: !!token });
-
   const invite: InviteDataType | null = isInviteData(data) ? data : null;
 
   const {
@@ -60,6 +59,11 @@ const Invite: NextPageWithLayout = () => {
         email: invite.email,
         first_name: invite.first_name,
         last_name: invite.last_name ?? '',
+        preferred_name: invite.preferred_name ?? '',
+        gender: invite.gender ?? '',
+        dob: invite.dob ?? '',
+        mobile: invite.mobile ?? '',
+        address: invite.address ?? '',
       });
     }
   }, [invite, reset]);
@@ -84,52 +88,37 @@ const Invite: NextPageWithLayout = () => {
     // @TODO combine createAccount and create profile into one call
     createAccount.mutate(
       {
-        invite_id: invite?.id,
         first_name,
         last_name,
         email,
         password,
         password_confirmation,
+        preferred_name,
+        dob,
+        gender,
+        mobile,
+        address,
       },
       {
         onSuccess: () => {
-          createProfile.mutate({
-            preferred_name,
-            dob,
-            gender,
-            mobile,
-            address,
-          });
+          toast.success(
+            <Message
+              title="Success"
+              body="Your account has been created."
+            />,
+          );
+          router.push('/login');
         },
       },
     );
   };
 
-  const createAccount = useMutation(
-    (data: { invite_id: number | undefined; first_name: string; last_name: string; email: string; password: string; password_confirmation: string }) => {
-      return auth.register(data);
-    },
-  );
-
-  const createProfile = useMutation(
-    (data: { preferred_name: string; dob: string; gender: string; mobile: string | null | undefined; address: string }) => {
-      return profilesApi.create(data);
-    },
-    {
-      onSuccess: () => {
-        toast.success(
-          <Message
-            title="Success"
-            body="Your account has been created."
-          />,
-        );
-        router.push('/login');
-      },
-    },
-  );
+  const createAccount = useMutation((data: InvitationFormType) => {
+    return invitesApi.createAccount(token, data);
+  });
 
   useEffect(() => {
-    if (createProfile.isError || createAccount.isError) {
+    if (createAccount.isError) {
       toast.error(
         <Message
           title="Error"
@@ -137,11 +126,11 @@ const Invite: NextPageWithLayout = () => {
         />,
       );
     }
-  }, [createProfile.isError, createAccount.isError]);
+  }, [createAccount.isError]);
 
-  const submitting = createProfile.isLoading || createAccount.isLoading;
+  const submitting = createAccount.isLoading;
 
-  if (isLoading) {
+  if (isLoading || userIsLoading) {
     return <PageLoading dark />;
   }
 
@@ -170,7 +159,7 @@ const Invite: NextPageWithLayout = () => {
       </div>
       <h1 className="mb-8 text-center text-3xl font-semibold text-gray-900">User Invitation</h1>
       {error || isEmpty(invite) ? (
-        <div className="rounded-lg bg-white p-5 font-semibold shadow-sm">
+        <div className="rounded-lg bg-white p-5 shadow-sm">
           <p>Your invite has expired or is invalid.</p>
           <p> Contact your school admin to resend you a new invite.</p>
         </div>

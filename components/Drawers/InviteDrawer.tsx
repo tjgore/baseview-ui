@@ -1,5 +1,5 @@
-/* eslint-disable max-lines */
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -24,6 +24,9 @@ type InviteDrawerProps = {
 };
 
 const InviteDrawer = ({ setOpen }: InviteDrawerProps) => {
+  const router = useRouter();
+  const { id: schoolId } = router.query;
+
   const [roleOptions, setRoleOptions] = useState<OptionsType>();
   const [schoolOptions, setSchoolOptions] = useState<OptionsType>();
 
@@ -36,7 +39,7 @@ const InviteDrawer = ({ setOpen }: InviteDrawerProps) => {
   } = useForm<InviteType>();
 
   const inviteMutation = useMutation((data: InviteType) => {
-    return invites.create(data);
+    return invites.create(schoolId as string, data);
   });
 
   const onSubmit: SubmitHandler<InviteType> = data => {

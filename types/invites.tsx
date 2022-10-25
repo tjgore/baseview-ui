@@ -1,5 +1,4 @@
 import { z } from 'zod';
-//import { profileFormSchema } from '@/types/profiles';
 
 export type InviteType = {
   last_name: string | null;
@@ -10,18 +9,15 @@ export type InviteType = {
 };
 
 const inviteDataSchema = z.object({
-  id: z.number(),
-  school_id: z.number(),
-  role_id: z.number(),
-  created_by_id: z.number(),
+  user_id: z.number().nullish(),
   first_name: z.string(),
   last_name: z.string().nullish(),
   email: z.string(),
-  token: z.string(),
-  expires_at: z.string(),
-  created_at: z.string(),
-  updated_at: z.string(),
-  accepted: z.boolean(),
+  dob: z.string().nullish(),
+  gender: z.string().nullish(),
+  mobile: z.string().nullish(),
+  address: z.string().nullish(),
+  preferred_name: z.string().nullish(),
 });
 
 export type InviteDataType = z.infer<typeof inviteDataSchema>;

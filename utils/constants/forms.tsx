@@ -50,5 +50,5 @@ export const genderOptions: OptionsType = [
 export const roleOptions: OptionsType = [
   { label: ROLES.ADMIN, value: ROLE_IDS.ADMIN },
   { label: ROLES.TEACHER, value: ROLE_IDS.TEACHER },
-  { label: ROLES.STUDENT, value: ROLE_IDS.STUDENT },
+  /* { label: ROLES.STUDENT, value: ROLE_IDS.STUDENT }, */
 ];

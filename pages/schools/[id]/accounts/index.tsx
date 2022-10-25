@@ -38,6 +38,7 @@ const tabs: TabsType = [
     link: 'role=student&limit=all',
     query: { role: 'student', limit: 'all' },
     current: true,
+    // Remove the roles, the can helper will be used instead
     roles: ROLES.TEACHER_AND_UP,
   },
   {
@@ -71,6 +72,7 @@ const tabs: TabsType = [
 ];
 
 const getRoleTabs = (roles: RoleListType | undefined) => {
+  // Update with a permission can helper
   return tabs.filter(tab => {
     const roleName = roles?.[0].nice_name ?? '';
     return tab.roles.includes(roleName);

@@ -1,7 +1,8 @@
 import type { LoginDataType } from '@/types/index';
 import type { SchoolType } from '@/types/schools';
 import type { ProfileFormType } from '@/types/profiles';
-import type { InviteType } from '@/types/invites';
+import type { InviteType, InvitationFormType } from '@/types/invites';
+import { AccountFormType } from '@/types/accounts';
 import httpRequest, { NextRequestType } from '@/services/HttpClient';
 
 export const csrfToken = async () => {
@@ -21,7 +22,7 @@ export const auth = {
   login: (data: LoginDataType) => withCsrf(() => httpRequest.post('/login', { data })),
   logout: () => httpRequest.post('/logout'),
   user: () => withCsrf(() => httpRequest.get('/api/user')),
-  register: (data: { [name: string]: string | number | undefined }) => httpRequest.post('/register', { data }),
+  // register: (data: { [name: string]: string | number | undefined }) => httpRequest.post('/register', { data }),
 };
 
 export const schools = {
@@ -39,13 +40,14 @@ export const roles = {
 };
 
 export const invites = {
-  create: (data: InviteType) => withCsrf(() => httpRequest.post('/api/invites', { data })),
+  create: (id: string, data: InviteType) => withCsrf(() => httpRequest.post(`/api/schools/${id}/invites`, { data })),
   findByToken: (token: string) => httpRequest.get(`/api/invites/${token}`),
+  createAccount: (token: string, data: InvitationFormType) => withCsrf(() => httpRequest.post(`/api/invites/${token}`, { data })),
 };
 
 export const profiles = {
   get: () => httpRequest.get('/api/profiles'),
-  create: (data: { [name: string]: string | null | undefined }) => httpRequest.post('/api/profiles', { data }),
+  // create: (data: { [name: string]: string | null | undefined }) => httpRequest.post('/api/profiles', { data }),
   edit: (data: ProfileFormType) => httpRequest.put('/api/profiles', { data }),
 };
 
@@ -53,6 +55,7 @@ export const accounts = {
   get: (id: string, query: string) => httpRequest.get(`/api/schools/${id}/accounts?${query}`),
   find: (id: string, userId: string) => httpRequest.get(`/api/schools/${id}/accounts/${userId}`),
   updateProfile: (id: string, profileId: string, data: ProfileFormType) => withCsrf(() => httpRequest.put(`/api/schools/${id}/profiles/${profileId}`, { data })),
+  create: (id: string, data: AccountFormType) => withCsrf(() => httpRequest.post(`/api/schools/${id}/accounts`, { data })),
 };
 
 export const overview = {

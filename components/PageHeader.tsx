@@ -1,4 +1,4 @@
-// import { ChevronLeftIcon } from '@heroicons/react/24/solid';
+// Import { ChevronLeftIcon } from '@heroicons/react/24/solid';
 
 type PageHeaderProps = {
   title: string;

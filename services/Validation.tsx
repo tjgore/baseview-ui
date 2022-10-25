@@ -4,7 +4,7 @@ type ObjectType = {
   [name: string]: string;
 };
 
-export type ValueType = string | { label: string; value: string } | { label: string; value: number } | number | null | undefined;
+export type ValueType = string | { label: string; value: string } | { label: string; value: number } | number[] | string[] | number | null | undefined;
 
 type FormFields<U> = { [name: string]: { id?: U; rules: string } };
 
