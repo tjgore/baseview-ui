@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { useState, useEffect } from 'react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import PhoneInputWithCountry from 'react-phone-number-input/react-hook-form';

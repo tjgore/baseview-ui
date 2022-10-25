@@ -85,10 +85,12 @@ const Profile: NextPageWithLayout = () => {
                           <EnvelopeOpenIcon className="mr-2 h-4 w-4 text-gray-400" />
                           <p>{profile.email}</p>
                         </div>
-                        <div className="mb-1 flex items-center pr-4 text-gray-500">
-                          <PhoneIcon className="mr-2 h-4 w-4 text-gray-400" />
-                          {profile.mobile}
-                        </div>
+                        {profile.mobile ? (
+                          <div className="mb-1 flex items-center pr-4 text-gray-500">
+                            <PhoneIcon className="mr-2 h-4 w-4 text-gray-400" />
+                            {profile.mobile}
+                          </div>
+                        ) : null}
                       </div>
 
                       <div>

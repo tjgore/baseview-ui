@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Avatar from 'boring-avatars';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { EnvelopeOpenIcon, PhoneIcon } from '@heroicons/react/24/solid';
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
@@ -27,14 +28,43 @@ import HelpText from '@/components/Form/HelpText';
 import { getDatePickerDate } from '@/utils/helpers';
 import LoadingContent from '@/components/Button/LoadingContent';
 import RolesForm from '@/components/Form/RolesForm';
+import Modal from '@/components/Modals';
 
 const profileForm = addValidation(profileFields);
 
 const ViewAccount: NextPageWithLayout = () => {
+  const [open, setOpen] = useState(false);
   useAuth({ middleware: 'auth' });
   const router = useRouter();
   const { id: schoolId, userId, edit } = router.query;
   const accountQuery = useQuery(['account-profile', userId], () => accountsApi.find(schoolId as string, userId as string));
+
+  const deleteAccount = useMutation(
+    () => {
+      return accountsApi.delete(schoolId as string, userId as string);
+    },
+    {
+      onSuccess: () => {
+        toast.error(
+          <Message
+            title="Success"
+            body="Account has been deleted"
+          />,
+        );
+        router.push(`/schools/${schoolId}/accounts`);
+      },
+      onError: error => {
+        console.log(error);
+        toast.error(
+          <Message
+            title="Error"
+            body="An error occurred. Try again."
+          />,
+        );
+        setOpen(false);
+      },
+    },
+  );
 
   const account: AccountDataType | null = isAccountData(accountQuery.data) ? accountQuery.data : null;
 
@@ -138,10 +168,12 @@ const ViewAccount: NextPageWithLayout = () => {
                         <EnvelopeOpenIcon className="mr-2 h-4 w-4 text-gray-400" />
                         <p>{account.email}</p>
                       </div>
-                      <div className="mb-1 flex items-center pr-4 text-gray-500">
-                        <PhoneIcon className="mr-2 h-4 w-4 text-gray-400" />
-                        {account.mobile}
-                      </div>
+                      {account.mobile ? (
+                        <div className="mb-1 flex items-center pr-4 text-gray-500">
+                          <PhoneIcon className="mr-2 h-4 w-4 text-gray-400" />
+                          {account.mobile}
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 </div>
@@ -431,6 +463,52 @@ const ViewAccount: NextPageWithLayout = () => {
                   </div>
                 </div>
               )}
+
+              <div className="mb-8 rounded-lg border bg-white shadow-sm">
+                <div className="flex items-center justify-between border-b px-5 pt-5 pb-3 sm:px-10">
+                  <div>
+                    <h3 className="text-xl font-medium leading-6 text-red-600">Danger Zone: Delete Account</h3>
+                    <p className="mt-1 text-xs text-gray-500">This action will delete the account from the platform.</p>
+                  </div>
+                </div>
+                <div className="px-5 py-6 sm:px-10">
+                  <div className="grid grid-cols-6 gap-6">
+                    <div className="col-span-6 sm:col-span-6">
+                      <p className="mb-4">Be sure you want to delete this account. There is no going back.</p>
+
+                      <Button
+                        text="Delete Account"
+                        onClick={() => setOpen(true)}
+                        color="danger"
+                      />
+                      <Modal
+                        open={open}
+                        setOpen={(state: boolean) => setOpen(state)}
+                        title="Delete Account"
+                        body={`Are you sure you want to delete ${account.full_name}'s account?`}
+                        icon={
+                          <ExclamationTriangleIcon
+                            className="h-6 w-6 text-red-600"
+                            aria-hidden="true"
+                          />
+                        }
+                        button={
+                          <Button
+                            className="ml-3"
+                            disabled={deleteAccount.isLoading}
+                            color="danger"
+                            onClick={() => deleteAccount.mutate()}>
+                            <LoadingContent
+                              loading={deleteAccount.isLoading}
+                              text="Yes, delete"
+                            />
+                          </Button>
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </>
           )}
         </div>

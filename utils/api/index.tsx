@@ -22,7 +22,6 @@ export const auth = {
   login: (data: LoginDataType) => withCsrf(() => httpRequest.post('/login', { data })),
   logout: () => httpRequest.post('/logout'),
   user: () => withCsrf(() => httpRequest.get('/api/user')),
-  // register: (data: { [name: string]: string | number | undefined }) => httpRequest.post('/register', { data }),
 };
 
 export const schools = {
@@ -47,7 +46,6 @@ export const invites = {
 
 export const profiles = {
   get: () => httpRequest.get('/api/profiles'),
-  // create: (data: { [name: string]: string | null | undefined }) => httpRequest.post('/api/profiles', { data }),
   edit: (data: ProfileFormType) => httpRequest.put('/api/profiles', { data }),
 };
 
@@ -56,6 +54,7 @@ export const accounts = {
   find: (id: string, userId: string) => httpRequest.get(`/api/schools/${id}/accounts/${userId}`),
   updateProfile: (id: string, profileId: string, data: ProfileFormType) => withCsrf(() => httpRequest.put(`/api/schools/${id}/profiles/${profileId}`, { data })),
   create: (id: string, data: AccountFormType) => withCsrf(() => httpRequest.post(`/api/schools/${id}/accounts`, { data })),
+  delete: (id: string, userId: string) => withCsrf(() => httpRequest.delete(`/api/schools/${id}/accounts/${userId}`)),
 };
 
 export const overview = {
